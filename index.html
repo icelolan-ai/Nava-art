@@ -11,6 +11,9 @@
   --cyan:#00f0ff;
   --cyan-dim:#00b8c9;
   --teal-deep:#063a3f;
+  --purple:#7c3fe0;
+  --purple-dim:#5a24ad;
+  --purple-black:#0a0712;
   --grid-line:rgba(255,255,255,0.055);
   --text:#eef4f4;
   --text-dim:#8a9a9c;
@@ -21,7 +24,7 @@
   --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;width:100%;height:100%;}
+html,body{margin:0;padding:0;background:radial-gradient(130% 90% at 50% -10%, #1c0f33 0%, #0a0712 42%, #050409 100%);color:var(--text);font-family:var(--sans);overflow-x:hidden;width:100%;height:100%;}
 ::selection{background:var(--cyan);color:#04191a;}
 ::-webkit-scrollbar{width:0;height:0;}
 
@@ -52,6 +55,23 @@ button{font-family:inherit;}
   background:var(--grid-line); transform:translate(-50%,-50%);
 }
 
+/* floating cyberpunk background shapes — purple/cyan blurred shapes that
+   drift on their own, parallax with the cursor, and zoom/rotate on scroll */
+#bgShapes{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;}
+.shape-outer{position:absolute; will-change:transform; transition:transform .25s cubic-bezier(.2,.8,.3,1);}
+.shape-inner{filter:blur(42px); opacity:0.5; animation:shapeDrift linear infinite alternate;}
+.shape-inner.is-circle{border-radius:50%;}
+.shape-inner.is-square{border-radius:22%;}
+@keyframes shapeDrift{
+  0%{transform:translate(0,0) rotate(0deg);}
+  50%{transform:translate(22px,-28px) rotate(180deg);}
+  100%{transform:translate(-18px,18px) rotate(360deg);}
+}
+#dustCanvas{position:fixed; inset:0; z-index:1; pointer-events:none;}
+@media (max-width:880px){
+  .shape-inner{filter:blur(28px);}
+}
+
 /* ---------- TOP NAV ---------- */
 .topnav{
   position:absolute; top:0; left:0; right:0; z-index:5;
@@ -77,7 +97,7 @@ button{font-family:inherit;}
 .lang-toggle button.active{background:var(--cyan); color:#04191a; font-weight:700;}
 
 /* ---------- PAGE 1: HERO ---------- */
-#page-hero{background:radial-gradient(120% 90% at 78% 30%, #0f1a1c 0%, var(--bg) 62%);}
+#page-hero{background:radial-gradient(120% 90% at 78% 30%, #1c1030 0%, rgba(11,7,18,0.4) 62%);}
 .hero-wrap{
   flex:1; display:grid; grid-template-columns:1.1fr 0.9fr; align-items:center;
   padding:0 42px; gap:20px; position:relative; z-index:2;
@@ -129,13 +149,28 @@ button{font-family:inherit;}
 @keyframes scrollpulse{0%{opacity:.2; transform:scaleY(.4); transform-origin:top;} 50%{opacity:1; transform:scaleY(1); transform-origin:top;} 100%{opacity:.2; transform:scaleY(.4); transform-origin:top;}}
 
 /* ---------- PAGE 2: MENU ---------- */
-#page-menu{background:var(--bg);}
+#page-menu{background:linear-gradient(180deg, rgba(7,5,13,0.55), rgba(6,5,10,0.82));}
 .menu-wrap{flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 42px; position:relative; z-index:2;}
 .menu-head{margin-bottom:44px;}
 .menu-head .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:0.22em; color:var(--cyan-dim); text-transform:uppercase; margin-bottom:16px; display:flex; gap:10px; align-items:center;}
 .menu-head .eyebrow::before{content:"";width:26px;height:1px;background:var(--cyan-dim);}
 .menu-head h2{font-family:var(--serif); font-size:clamp(34px,4.4vw,58px); font-weight:600; margin:0; letter-spacing:-0.01em;}
-.menu-grid{display:grid; grid-template-columns:1.4fr 1fr; gap:22px; max-width:1180px;}
+.menu-grid{display:grid; grid-template-columns:1fr 1fr; gap:26px; max-width:1180px; align-items:stretch;}
+.menu-card.secondary{background:linear-gradient(160deg, rgba(150,80,255,0.12), rgba(150,80,255,0.01));}
+.menu-card.secondary:hover{border-color:rgba(170,110,255,0.5);}
+.menu-card.secondary .num, .menu-card.secondary .go{color:#c39bff;}
+.menu-card.secondary .card-glow{background:radial-gradient(circle, rgba(150,80,255,0.18), transparent 70%);}
+.menu-scroll-cue{
+  display:flex; align-items:center; justify-content:center; gap:9px; margin-top:26px;
+  color:var(--text-dim); font-family:var(--mono); font-size:11px; letter-spacing:0.12em;
+  text-transform:uppercase; cursor:pointer; transition:color .25s ease;
+}
+.menu-scroll-cue:hover{color:var(--cyan);}
+.menu-scroll-cue .arrow{animation:cueBob 1.6s ease-in-out infinite;}
+@keyframes cueBob{0%,100%{transform:translateY(0);} 50%{transform:translateY(4px);}}
+@media (max-width:880px){
+  .menu-grid{grid-template-columns:1fr; gap:16px;}
+}
 .menu-card{
   position:relative; border-radius:20px; padding:38px; min-height:280px; cursor:pointer;
   border:1px solid rgba(255,255,255,0.09); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between;
@@ -161,7 +196,6 @@ button{font-family:inherit;}
 .menu-card:hover .card-glow{transform:scale(1.25);}
 
 /* ---------- PAGE 3: HOW TO USE ---------- */
-#page-howto{background:var(--bg);}
 .howto-wrap{flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 42px; position:relative; z-index:2;}
 .howto-top{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:40px; gap:20px; flex-wrap:wrap;}
 .howto-top h2{font-family:var(--serif); font-size:clamp(32px,4.2vw,54px); margin:0; font-weight:600;}
@@ -186,22 +220,106 @@ button{font-family:inherit;}
 #fluidCanvas{position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none;}
 #jellyCanvas{position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; pointer-events:none;}
 
+/* Canvas surface styles — paper grain, graph grid, isometric lattice.
+   Sits above the art but never intercepts touches. */
+#canvasTexture{position:absolute; inset:0; pointer-events:none; z-index:5; opacity:0; transition:opacity .3s ease;}
+#canvasTexture.paper{
+  opacity:.5;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.14) 1px, transparent 1px);
+  background-size:4px 4px, 7px 7px;
+  background-position:0 0, 2px 3px;
+}
+#canvasTexture.grid{
+  opacity:.55;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size:38px 38px, 38px 38px;
+}
+#canvasTexture.iso{
+  opacity:.5;
+  background-image:
+    linear-gradient(30deg, rgba(255,255,255,0.11) 1px, transparent 1px),
+    linear-gradient(-30deg, rgba(255,255,255,0.11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+  background-size:44px 44px, 44px 44px, 44px 44px;
+}
+
+/* How-to slide-up sheet — stays hidden until the guide is requested */
+#howtoSheet{
+  position:fixed; inset:0; z-index:60; display:flex; flex-direction:column; justify-content:flex-end;
+  background:rgba(5,3,10,0.72); backdrop-filter:blur(6px);
+  opacity:0; pointer-events:none; transition:opacity .32s ease;
+}
+#howtoSheet.open{opacity:1; pointer-events:auto;}
+#howtoSheet .sheet-inner{
+  background:linear-gradient(180deg, #150c26 0%, #0a0712 100%);
+  border-top:1px solid rgba(0,240,255,0.22);
+  border-radius:22px 22px 0 0; padding:14px 26px 26px;
+  max-height:88vh; display:flex; flex-direction:column;
+  transform:translateY(100%); transition:transform .42s cubic-bezier(.2,.9,.25,1);
+  box-shadow:0 -18px 60px rgba(0,0,0,0.55);
+}
+#howtoSheet.open .sheet-inner{transform:translateY(0);}
+.sheet-grip{
+  width:44px; height:4px; border-radius:4px; background:rgba(255,255,255,0.22);
+  margin:2px auto 16px; flex-shrink:0;
+}
+#howtoSheet .howto-scroll{max-height:none; flex:1; min-height:0;}
+#howtoSheet .howto-top{margin-bottom:18px;}
+@media (max-width:880px){
+  #howtoSheet .sheet-inner{padding:12px 16px 20px; max-height:92vh;}
+}
+
+/* Drawer tabs */
+.tab-bar{display:flex; gap:5px; margin-bottom:14px; background:rgba(255,255,255,0.03);
+  padding:4px; border-radius:11px; border:1px solid rgba(255,255,255,0.07);}
+.tab{flex:1; text-align:center; padding:7px 4px; border-radius:8px; font-size:11.5px;
+  color:var(--text-dim); cursor:pointer; transition:all .2s ease; white-space:nowrap;}
+.tab.active{background:rgba(0,240,255,0.14); color:var(--cyan);}
+.tab-page h5:first-child{margin-top:0;}
+
+/* How-to tool reference */
+.howto-scroll{max-height:58vh; overflow-y:auto; padding-right:6px;}
+.howto-h{font-size:12px; text-transform:uppercase; letter-spacing:0.14em; color:var(--cyan-dim);
+  font-family:var(--mono); margin:26px 0 12px;}
+.tool-guide{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px;}
+.tg-item{display:flex; gap:12px; align-items:flex-start; padding:11px 13px; border-radius:12px;
+  border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025);}
+.tg-ico{width:34px; height:34px; flex-shrink:0; border-radius:9px; display:flex; align-items:center;
+  justify-content:center; background:rgba(0,240,255,0.08); border:1px solid rgba(0,240,255,0.22); color:var(--cyan);}
+.tg-ico svg{width:17px; height:17px; stroke:currentColor; fill:none;}
+.tg-txt b{display:block; font-size:13px; margin-bottom:3px; color:var(--text);}
+.tg-txt small{color:var(--text-dim); font-size:12px; line-height:1.5;}
+
+/* Library entries */
+.lib-item{display:flex; align-items:center; gap:10px; padding:8px; margin-bottom:8px; border-radius:12px;
+  border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.03); cursor:pointer; transition:border-color .2s ease;}
+.lib-item:hover{border-color:rgba(0,240,255,0.45);}
+.lib-thumb{width:52px; height:52px; border-radius:9px; flex-shrink:0; background:#12091c center/cover no-repeat; border:1px solid rgba(255,255,255,0.08);}
+.lib-meta{flex:1; min-width:0;}
+.lib-meta b{display:block; font-size:12.5px; color:var(--text); font-weight:600;}
+.lib-meta small{color:var(--text-dim); font-size:10.5px; font-family:var(--mono);}
+.lib-del{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  color:#ff8a8a; background:rgba(255,120,120,0.1); font-size:15px; line-height:1;}
+.lib-empty{color:var(--text-dim); font-size:12px; padding:10px 2px;}
+
 /* studio top bar */
 .studio-top{
-  position:absolute; top:0; left:0; right:0; z-index:20; display:flex; align-items:center; justify-content:space-between;
-  padding:18px 24px; pointer-events:none;
+  position:absolute; top:0; left:0; right:0; z-index:20; display:flex; align-items:center; justify-content:flex-start;
+  padding:10px 20px; pointer-events:none;
 }
 .studio-top > *{pointer-events:auto;}
 .pill{
-  display:flex; align-items:center; gap:10px; background:rgba(14,16,17,var(--panel-alpha));
+  display:flex; align-items:center; gap:10px; background:rgba(21,13,32,var(--panel-alpha));
   border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(14px); border-radius:100px; padding:9px 16px;
   font-family:var(--mono); font-size:11.5px; letter-spacing:0.05em; color:var(--text-dim);
 }
-.studio-brand{display:flex; align-items:center; gap:7px; font-family:var(--serif); font-size:13px; font-weight:600; padding:7px 13px !important;}
-.studio-brand .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px 1.5px var(--cyan);}
 .top-actions{display:flex; gap:10px;}
 .icon-btn{
-  width:38px; height:38px; border-radius:50%; background:rgba(14,16,17,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1);
+  width:38px; height:38px; border-radius:50%; background:rgba(21,13,32,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1);
   display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-dim); backdrop-filter:blur(14px);
   transition:color .2s ease, border-color .2s ease, transform .2s ease;
 }
@@ -224,7 +342,7 @@ button{font-family:inherit;}
 .quick-colors{
   position:absolute; right:14px; top:52%; transform:translateY(-50%); z-index:21;
   display:flex; flex-direction:column; gap:11px; padding:10px 7px; border-radius:100px;
-  background:rgba(12,14,15,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(14px);
+  background:rgba(19,11,29,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(14px);
 }
 .quick-color-dot{
   width:20px; height:20px; border-radius:50%; cursor:pointer; border:2px solid rgba(255,255,255,0.28);
@@ -239,8 +357,8 @@ button{font-family:inherit;}
 
 /* right settings drawer */
 .drawer{
-  position:absolute; top:70px; right:20px; width:296px; z-index:25;
-  background:rgba(12,14,15,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); border-radius:18px;
+  position:absolute; top:64px; right:20px; width:296px; z-index:25;
+  background:rgba(19,11,29,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); border-radius:18px;
   backdrop-filter:blur(18px); padding:18px; max-height:calc(100vh - 220px); overflow-y:auto;
   transform:translateX(340px); opacity:0; pointer-events:none; transition:transform .4s cubic-bezier(.2,.9,.25,1), opacity .3s ease;
 }
@@ -248,6 +366,9 @@ button{font-family:inherit;}
 .drawer h5{font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:var(--cyan-dim); margin:16px 0 10px 0; font-family:var(--mono);}
 .drawer h5:first-child{margin-top:0;}
 .field{margin-bottom:12px;}
+/* Mode-specific panels sit directly under a chip row — give them air */
+#particleFields, #voronoiFields, #blackholeFields, #lineCountField{margin-top:16px;}
+.chip-row + .field{margin-top:14px;}
 .field label{display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-dim); margin-bottom:6px;}
 .field label span.val{color:var(--text); font-family:var(--mono); font-size:11px;}
 input[type=range]{
@@ -271,6 +392,10 @@ select{
   cursor:pointer; background:rgba(255,255,255,0.02); transition:all .2s ease;
 }
 .chip.active, .chip:hover{border-color:var(--cyan); color:var(--cyan);}
+.flow-pad{display:grid; grid-template-columns:repeat(3,1fr); gap:7px; max-width:130px; margin:4px 0 6px;}
+.flow-dot{aspect-ratio:1; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); cursor:pointer; transition:all .2s ease;}
+.flow-dot:hover{border-color:rgba(0,240,255,0.4);}
+.flow-dot.active{background:rgba(0,240,255,0.2); border-color:var(--cyan);}
 .mood-swatch{
   border-radius:10px; padding:10px; border:1px solid rgba(255,255,255,0.09); cursor:pointer; margin-bottom:8px;
   display:flex; align-items:center; gap:10px; transition:border-color .2s ease, transform .2s ease;
@@ -293,23 +418,57 @@ select{
   width:100%; max-width:640px; padding:0 14px; pointer-events:none;
 }
 .bottom-cluster > *{pointer-events:auto;}
+.undo-redo-row{display:flex; gap:10px;}
+
+/* Hide UI: everything tagged .hideable-ui fades out and stops intercepting
+   taps, leaving only the brand pill, exit/lang, the Hide-UI toggle itself,
+   and the Freeze/Play pod (which is intentionally outside this system). */
+#studio.ui-hidden .hideable-ui{opacity:0; pointer-events:none;}
+
+/* Freeze / Resume — always visible regardless of Hide UI, so a person can
+   still stop the animation and export a clean frame at any time. */
+.stop-play-pod{
+  display:flex; align-items:center; gap:8px; height:38px;
+  background:rgba(19,11,29,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.14); border-radius:100px;
+  padding:0 15px 0 12px; backdrop-filter:blur(16px); cursor:pointer; color:var(--text);
+  font-size:11.5px; letter-spacing:0.03em; transition:border-color .2s ease; white-space:nowrap; flex-shrink:0;
+}
+.stop-play-pod:hover{border-color:rgba(0,240,255,0.4);}
+.stop-play-pod svg{width:13px;height:13px; flex-shrink:0;}
+.stop-play-pod.frozen{color:var(--cyan); border-color:rgba(0,240,255,0.5);}
+@media (max-width:880px){
+  .stop-play-pod{height:33px; padding:0 12px 0 10px; font-size:10.5px;}
+}
 
 /* macOS-style dock */
 .dock-wrap{
-  display:flex; justify-content:center; width:100%; max-width:100%; overflow-x:auto;
+  display:flex; justify-content:center; align-items:center; gap:4px; width:100%; max-width:100%;
 }
+.dock-arrow{
+  width:24px; height:34px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(19,11,29,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1);
+  border-radius:9px; color:var(--text-dim); cursor:pointer; font-size:17px; line-height:1;
+  backdrop-filter:blur(14px); user-select:none;
+}
+.dock-arrow:hover{color:var(--cyan); border-color:rgba(0,240,255,0.4);}
+#dock{overflow-x:auto; scroll-behavior:smooth;}
+#dock::-webkit-scrollbar{display:none;}
 .dock-wrap::-webkit-scrollbar{display:none;}
 .dock{
   display:flex; align-items:flex-end; gap:10px; padding:11px 16px; border-radius:24px;
-  background:rgba(12,14,15,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(20px);
+  background:rgba(19,11,29,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(20px);
 }
 .dock-icon{
-  width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+  width:40px; height:40px; border-radius:13px; display:flex; align-items:center; justify-content:center;
   cursor:pointer; position:relative; transition:transform .18s cubic-bezier(.2,.9,.3,1), width .18s ease, height .18s ease, background .2s ease;
   color:#c7d3d4; flex-shrink:0;
 }
 .dock-icon svg{width:20px; height:20px; stroke:currentColor; fill:none; transition:transform .18s ease;}
 .dock-icon.active{color:var(--cyan);}
+.icon-btn.recording{color:#ff5a6e; border-color:rgba(255,90,110,0.6); animation:recPulse 1.4s ease-in-out infinite;}
+@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,90,110,0.5);} 50%{box-shadow:0 0 0 7px rgba(255,90,110,0);}}
+.dock-icon.disabled{opacity:0.3; cursor:not-allowed; color:#7c8489;}
+.dock-icon.disabled:hover{transform:none !important;}
 .dock-icon.active::after{content:""; position:absolute; bottom:-9px; width:4px; height:4px; border-radius:50%; background:var(--cyan); box-shadow:0 0 6px 1px var(--cyan);}
 .dock-icon .tip{
   position:absolute; bottom:60px; left:50%; transform:translateX(-50%); background:#101314; border:1px solid rgba(255,255,255,0.12);
@@ -322,7 +481,7 @@ select{
 /* audio transport pod — sits above the dock inside .bottom-cluster */
 .audio-pod{
   display:flex; align-items:center; gap:10px;
-  background:rgba(12,14,15,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:8px 8px 8px 14px;
+  background:rgba(19,11,29,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:8px 8px 8px 14px;
   backdrop-filter:blur(16px); max-width:100%;
 }
 .audio-pod .track-name{font-size:11.5px; font-family:var(--mono); color:var(--text-dim); min-width:96px; max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
@@ -330,14 +489,22 @@ select{
 .audio-viz span{width:2.5px; background:var(--cyan); border-radius:2px; opacity:.85;}
 .pod-btn{width:30px;height:30px;border-radius:50%; background:rgba(255,255,255,0.06); border:none; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--text); cursor:pointer;}
 .pod-btn:hover{color:var(--cyan);}
+.reactivity-row{
+  display:flex; align-items:center; gap:9px; width:100%; max-width:100%;
+  background:rgba(19,11,29,var(--panel-alpha)); border:1px solid rgba(255,255,255,0.1); border-radius:100px;
+  padding:6px 16px; backdrop-filter:blur(16px); font-size:10.5px; color:var(--text-dim); font-family:var(--mono);
+}
+.reactivity-row input[type=range]{flex:1;}
+.reactivity-row .val{color:var(--cyan); min-width:14px; text-align:right;}
 
 /* left tool label / active tool card */
 .tool-status{
-  position:absolute; top:58px; left:20px; z-index:20; background:rgba(12,14,15,var(--panel-alpha));
+  position:absolute; top:auto; bottom:96px; left:12px; z-index:19; background:rgba(19,11,29,var(--panel-alpha));
   border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:12px 16px; backdrop-filter:blur(16px);
   font-size:11.5px; color:var(--text-dim); max-width:220px; transition:opacity .25s ease;
 }
 .tool-status b{color:var(--cyan); font-weight:600; display:block; font-size:13px; margin-bottom:3px;}
+.tool-status.drawer-open,.tool-status.status-off{opacity:0; pointer-events:none;}
 
 @media (max-width: 880px){
   .hero-wrap{grid-template-columns:1fr; padding:110px 24px 40px;}
@@ -347,16 +514,16 @@ select{
   .menu-grid{grid-template-columns:1fr;}
   .steps{grid-template-columns:1fr;}
   .topnav{padding:20px 22px;}
-  .drawer{right:10px; left:10px; width:auto; top:128px;}
-  .tool-status{top:112px;}
-  .dock-icon{width:40px;height:40px; border-radius:11px;}
+  .drawer{right:10px; left:10px; width:auto; top:64px;}
+  .tool-status{bottom:92px; left:10px;}
+  .dock-icon{width:36px;height:36px; border-radius:10px;}
   .dock{gap:6px; padding:9px 10px;}
   .dock-sep{margin:4px 0;}
   .audio-pod{padding:6px 6px 6px 12px;}
   .audio-pod .track-name{min-width:0; max-width:78px;}
   .tool-status{max-width:150px; padding:9px 12px;}
-  .studio-top{padding:14px 14px; flex-wrap:wrap; row-gap:8px;}
-  .top-actions{gap:7px; flex-wrap:wrap; justify-content:flex-end;}
+  .studio-top{padding:8px 12px; flex-wrap:wrap; row-gap:8px;}
+  .top-actions{gap:7px; flex-wrap:wrap; justify-content:flex-start;}
   .icon-btn{width:33px; height:33px;}
   .icon-btn svg{width:14px;height:14px;}
 }
@@ -369,6 +536,8 @@ select{
 <body>
 
 <div class="grid-lines" id="bgGrid"></div>
+<div id="bgShapes"></div>
+<canvas id="dustCanvas"></canvas>
 
 <!-- ============ SCROLL FLOW: LANDING PAGES ============ -->
 <div id="flow">
@@ -379,7 +548,7 @@ select{
     <div class="nav-links">
       <a href="#page-hero" data-i18n="navHome">Home</a>
       <a href="#page-menu" data-i18n="navMenu">Menu</a>
-      <a href="#page-howto" data-i18n="navHowto">How to Use</a>
+      <a href="#howto-sheet" id="navHowtoLink" data-i18n="navHowto">How to Use</a>
     </div>
     <div class="nav-right">
       <div class="lang-toggle">
@@ -431,23 +600,30 @@ select{
           </div>
           <div class="go"><span data-i18n="menuStartGo">Launch workspace</span><svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
         </div>
-        <div class="menu-card" id="menuHowto">
+        <div class="menu-card secondary" id="menuHowto">
           <div class="card-glow"></div>
           <div class="num">02</div>
           <div>
             <h3 data-i18n="menuHowTitle">How to Use</h3>
             <p data-i18n="menuHowDesc">A short walkthrough of tools, gestures and sound before you dive in.</p>
           </div>
-          <div class="go"><span data-i18n="menuHowGo">View guide</span><svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+          <div class="go"><span data-i18n="menuHowGo">View guide</span><svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
         </div>
+      </div>
+      <div class="menu-scroll-cue" id="menuScrollCue">
+        <span data-i18n="menuScrollHint">Scroll down to read the guide</span>
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </div>
     </div>
   </section>
 
   <!-- PAGE 3 — HOW TO USE -->
-  <section class="section" id="page-howto">
-    <div class="grid-lines"></div>
-    <div class="howto-wrap">
+
+</div>
+
+  <div id="howtoSheet">
+        <div class="howto-wrap sheet-inner">
+      <div class="sheet-grip"></div>
       <div class="howto-top">
         <div>
           <div class="eyebrow" data-i18n="menuEyebrow">CHOOSE YOUR PATH</div>
@@ -458,83 +634,154 @@ select{
           <span data-i18n="backToMenu">Back to menu</span>
         </button>
       </div>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">01</div>
-          <h4 data-i18n="step1Title">Draw &amp; drag</h4>
-          <p data-i18n="step1Desc">Click or touch the canvas and drag to inject color into the fluid field. Change color mid-stroke and it blends physically where the paths cross.</p>
+      <div class="howto-scroll">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">01</div>
+            <h4 data-i18n="step1Title">Draw &amp; drag</h4>
+            <p data-i18n="step1Desc">Click or touch the canvas and drag to inject colour into the fluid.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">02</div>
+            <h4 data-i18n="step2Title">Pick a tool</h4>
+            <p data-i18n="step2Desc">The dock at the bottom holds every tool. Tap the active one again to deselect it.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">03</div>
+            <h4 data-i18n="step3Title">Play with sound</h4>
+            <p data-i18n="step3Desc">Open the music panel and the artwork pulses in time with the track.</p>
+          </div>
         </div>
-        <div class="step">
-          <div class="step-num">02</div>
-          <h4 data-i18n="step2Title">Pick a tool &amp; motion</h4>
-          <p data-i18n="step2Desc">The dock at the bottom holds art modes, motion physics (spin, zig-zag, ripple, dispersion), jelly bodies and lighting — hover to expand, like a macOS dock.</p>
-        </div>
-        <div class="step">
-          <div class="step-num">03</div>
-          <h4 data-i18n="step3Title">Play with sound</h4>
-          <p data-i18n="step3Desc">Pick a Lo-Fi track from the audio pod — the fluid's force, ripple intensity and neon glow all pulse in sync with its frequencies in real time.</p>
-        </div>
+
+        <h3 class="howto-h" data-i18n="htTools">Toolbar</h3>
+        <div class="tool-guide" id="guideTools"></div>
+
+        <h3 class="howto-h" data-i18n="htTop">Top bar</h3>
+        <div class="tool-guide" id="guideTop"></div>
+
+        <h3 class="howto-h" data-i18n="htModes">Art modes</h3>
+        <div class="tool-guide" id="guideModes"></div>
       </div>
       <div class="howto-cta">
         <button class="btn-primary" id="howtoStartBtn" data-i18n="heroCta">Enter the Studio</button>
       </div>
     </div>
-  </section>
-
-</div>
+  </div>
 
 <!-- ============ STUDIO WORKSPACE ============ -->
 <div id="studio">
   <canvas id="fluidCanvas"></canvas>
   <canvas id="jellyCanvas"></canvas>
+  <div id="canvasTexture"></div>
 
   <div class="studio-top">
-    <div class="pill studio-brand"><span class="dot"></span><span data-i18n="brand">NOVA STUDIO</span></div>
     <div class="top-actions">
-      <div class="icon-btn" id="exitStudio" title="Exit">
+      <div class="icon-btn hideable-ui" id="exitStudio" title="Exit">
         <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       </div>
-      <div class="icon-btn" id="langToggleStudio" title="EN/TH">
+      <div class="icon-btn hideable-ui" id="langToggleStudio" title="EN/TH">
         <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></svg>
       </div>
-      <div class="icon-btn" id="undoBtn" title="Undo">
-        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
-      </div>
-      <div class="icon-btn" id="redoBtn" title="Redo">
-        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
-      </div>
-      <div class="icon-btn" id="clearCanvasBtn" title="Clear">
+      <div class="icon-btn hideable-ui" id="clearCanvasBtn" title="Clear">
         <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
       </div>
-      <div class="icon-btn accent" id="exportBtn" title="Export PNG">
+      <div class="icon-btn accent hideable-ui" id="exportBtn" title="Export PNG">
         <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
       </div>
-      <div class="icon-btn" id="openSettings" title="Settings">
+      <div class="icon-btn hideable-ui" id="openSettings" title="Settings">
         <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+      <div class="icon-btn hideable-ui" id="recordBtn" title="Record Video">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <div class="icon-btn hideable-ui" id="saveProjectBtn" title="Save Project">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+      </div>
+      <div class="icon-btn hideable-ui" id="loadProjectBtn" title="Open Project">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="icon-btn hideable-ui" id="libraryBtn" title="Library">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <input type="file" id="loadProjectInput" accept="application/json,.novart" style="display:none;">
+      <div class="icon-btn" id="hideUiBtn" title="Hide UI">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="stop-play-pod" id="stopPlayBtn" title="Freeze / Resume">
+        <svg id="stopPlayIcon" viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="7" width="10" height="10" rx="1.5"/></svg>
+        <span id="stopPlayLabel" data-i18n="btnFreeze">Freeze</span>
       </div>
     </div>
   </div>
 
-  <div class="tool-status" id="toolStatus">
+  <div class="tool-status hideable-ui" id="toolStatus">
     <b id="toolStatusTitle">Fluid Wisps</b>
     <span id="toolStatusDesc">Spin motion · click &amp; drag to paint</span>
   </div>
 
-  <div class="quick-colors" id="quickColors"></div>
+  <div class="quick-colors hideable-ui" id="quickColors"></div>
 
   <!-- PALETTE DRAWER — mood, color, lighting -->
-  <div class="drawer" id="paletteDrawer">
+  <div class="drawer hideable-ui" id="paletteDrawer">
+    <h5 data-i18n="secSymmetry">Symmetry</h5>
+    <div class="chip-row" id="symmetryChips">
+      <div class="chip active" data-sym="1" data-i18n="symOff">Off</div>
+      <div class="chip" data-sym="2">2×</div>
+      <div class="chip" data-sym="4">4×</div>
+      <div class="chip" data-sym="6">6×</div>
+      <div class="chip" data-sym="8">8×</div>
+    </div>
+    <div class="toggle-row">
+      <span data-i18n="pMirror" style="font-size:12.5px;color:var(--text-dim);">Mirror Axis</span>
+      <div class="switch" id="mirrorSwitch"></div>
+    </div>
+
+    <h5 data-i18n="secCanvasStyle">Canvas Style</h5>
+    <div class="chip-row" id="canvasStyleChips">
+      <div class="chip active" data-cstyle="plain" data-i18n="csPlain">Plain</div>
+      <div class="chip" data-cstyle="paper" data-i18n="csPaper">Paper</div>
+      <div class="chip" data-cstyle="grid" data-i18n="csGrid">Grid</div>
+      <div class="chip" data-cstyle="iso" data-i18n="csIso">Isometric</div>
+    </div>
+    <div class="toggle-row">
+      <span data-i18n="pTextureBehind" style="font-size:12.5px;color:var(--text-dim);">Texture Behind Water</span>
+      <div class="switch" id="textureBehindSwitch"></div>
+    </div>
+
     <h5 data-i18n="secMood">Mood Presets</h5>
     <div id="moodList"></div>
+    <div class="chip-row" style="margin-top:10px;">
+      <div class="chip" id="savePresetBtn" data-i18n="btnSavePreset">Save current look</div>
+    </div>
+    <div id="myPresetList"></div>
 
     <h5 data-i18n="secColor">Color &amp; Background</h5>
     <div class="field">
       <label><span data-i18n="pBrushSize">Brush Size</span><span class="val" id="vBrushSize">1.0×</span></label>
       <input type="range" id="rBrushSize" min="0.3" max="3" step="0.1" value="1">
     </div>
+    <div class="toggle-row">
+      <span data-i18n="pGradientBrush" style="font-size:12.5px;color:var(--text-dim);">Gradient Brush</span>
+      <div class="switch" id="gradientSwitch"></div>
+    </div>
+    <div class="field" id="gradientSpeedField" style="display:none;">
+      <label><span data-i18n="pGradientSpeed">Gradient Speed</span><span class="val" id="vGradientSpeed">5</span></label>
+      <input type="range" id="rGradientSpeed" min="1" max="10" step="1" value="5">
+    </div>
     <div class="mini-grid">
       <div class="field"><label data-i18n="pBrush">Brush Color</label><input type="color" id="brushColor" value="#00f0ff"></div>
       <div class="field"><label data-i18n="pBg">Background</label><input type="color" id="bgColor" value="#0b0b0b"></div>
+    </div>
+    <div class="toggle-row">
+      <span data-i18n="pBgGradient" style="font-size:12.5px;color:var(--text-dim);">Gradient Background</span>
+      <div class="switch" id="bgGradientSwitch"></div>
+    </div>
+    <div id="bgGradientFields" style="display:none;">
+      <div class="field"><label data-i18n="pBg2">Second Colour</label><input type="color" id="bgColor2" value="#2a0f45"></div>
+      <div class="field">
+        <label><span data-i18n="pBgAngle">Gradient Angle</span><span class="val" id="vBgAngle">90°</span></label>
+        <input type="range" id="rBgAngle" min="0" max="360" step="15" value="90">
+      </div>
     </div>
 
     <h5 data-i18n="secLights">UV Corner Lighting</h5>
@@ -543,10 +790,27 @@ select{
       <label><span data-i18n="pGlow">Glow Intensity</span><span class="val" id="vGlow">0.55</span></label>
       <input type="range" id="rGlow" min="0" max="2" step="0.05" value="0.55">
     </div>
+
+    <h5 data-i18n="secWater">Water Texture</h5>
+    <div class="field">
+      <label><span data-i18n="pWispiness">Sharpness / Wispiness</span><span class="val" id="vWispiness">5</span></label>
+      <input type="range" id="rWispiness" min="1" max="10" step="1" value="5">
+    </div>
+    <div class="field">
+      <label><span data-i18n="pClarity">Clarity</span><span class="val" id="vClarity">3</span></label>
+      <input type="range" id="rClarity" min="1" max="5" step="1" value="3">
+    </div>
   </div>
 
   <!-- PHYSICS DRAWER — art style + motion behavior + simulation parameters -->
-  <div class="drawer" id="physicsDrawer">
+  <div class="drawer hideable-ui" id="physicsDrawer">
+    <div class="tab-bar" id="physicsTabs">
+      <div class="tab active" data-tab="art" data-i18n="tabArt">Art</div>
+      <div class="tab" data-tab="motion" data-i18n="tabMotion">Motion</div>
+      <div class="tab" data-tab="fluid" data-i18n="tabFluid">Fluid</div>
+      <div class="tab" data-tab="frame" data-i18n="tabFrame">Frame</div>
+    </div>
+    <div class="tab-page" data-page="art">
     <h5 data-i18n="secArt">Art Mode</h5>
     <div class="chip-row" id="artModeChips">
       <div class="chip active" data-mode="fluid" data-i18n="modeFluid">Fluid Wisps</div>
@@ -557,12 +821,83 @@ select{
       <div class="chip" data-mode="pool" data-i18n="modePool">Color Pool</div>
       <div class="chip" data-mode="blackhole" data-i18n="modeBlackhole">Black Hole</div>
       <div class="chip" data-mode="sparks" data-i18n="modeSparks">Sparks</div>
+      <div class="chip" data-mode="fishtank" data-i18n="modeFishtank">Fish Tank</div>
     </div>
     <div class="field" id="lineCountField" style="display:none;">
       <label><span data-i18n="pLineCount">Line Count</span><span class="val" id="vLineCount">6</span></label>
       <input type="range" id="rLineCount" min="3" max="10" step="1" value="6">
     </div>
+    <div id="particleFields" style="display:none;">
+      <div class="field">
+        <label><span data-i18n="pPtSize">Particle Size</span><span class="val" id="vPtSize">2.4</span></label>
+        <input type="range" id="rPtSize" min="0.8" max="8" step="0.2" value="2.4">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtSpeed">Particle Speed</span><span class="val" id="vPtSpeed">5</span></label>
+        <input type="range" id="rPtSpeed" min="1" max="10" step="1" value="5">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtCount">Particle Count</span><span class="val" id="vPtCount">380</span></label>
+        <input type="range" id="rPtCount" min="60" max="1200" step="20" value="380">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtTrail">Trail Persistence</span><span class="val" id="vPtTrail">0</span></label>
+        <input type="range" id="rPtTrail" min="0" max="10" step="1" value="0">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtAlpha">Particle Opacity</span><span class="val" id="vPtAlpha">80%</span></label>
+        <input type="range" id="rPtAlpha" min="10" max="100" step="5" value="80">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtColors">Colour Count</span><span class="val" id="vPtColors">1</span></label>
+        <input type="range" id="rPtColors" min="1" max="5" step="1" value="1">
+      </div>
+      <div class="chip-row">
+        <div class="chip" id="ptRandomColorsBtn" data-i18n="btnPtRandomColors">Randomise particle colours</div>
+      </div>
+      <div class="field" style="margin-top:14px;">
+        <label data-i18n="pPtInteract">Water Interaction</label>
+        <select id="ptInteract">
+          <option value="none" data-i18n="ptiNone">None</option>
+          <option value="absorb" data-i18n="ptiAbsorb">Absorb paint colour</option>
+          <option value="deposit" data-i18n="ptiDeposit">Paint into the water</option>
+          <option value="bounce" data-i18n="ptiBounce">Scatter off the paint</option>
+          <option value="carry" data-i18n="ptiCarry">Carried by the current</option>
+        </select>
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtInteractAmt">Interaction Strength</span><span class="val" id="vPtInteractAmt">5</span></label>
+        <input type="range" id="rPtInteractAmt" min="1" max="10" step="1" value="5">
+      </div>
+      <div class="mini-grid" id="ptColorGrid"></div>
+    </div>
+    <div id="voronoiFields" style="display:none;">
+      <div class="field">
+        <label><span data-i18n="pVoroScale">Cell Size</span><span class="val" id="vVoroScale">9</span></label>
+        <input type="range" id="rVoroScale" min="3" max="26" step="1" value="9">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pVoroSpeed">Cell Motion</span><span class="val" id="vVoroSpeed">4</span></label>
+        <input type="range" id="rVoroSpeed" min="0" max="10" step="1" value="4">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pVoroEdge">Edge Softness</span><span class="val" id="vVoroEdge">5</span></label>
+        <input type="range" id="rVoroEdge" min="1" max="10" step="1" value="5">
+      </div>
+    </div>
+    <div id="blackholeFields" style="display:none;">
+      <div class="field">
+        <label><span data-i18n="pBhLevel">Suction Level</span><span class="val" id="vBhLevel">5</span></label>
+        <input type="range" id="rBhLevel" min="1" max="10" step="1" value="5">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pBhSpeed">Suction Speed</span><span class="val" id="vBhSpeed">5</span></label>
+        <input type="range" id="rBhSpeed" min="1" max="10" step="1" value="5">
+      </div>
+    </div>
 
+    </div>
+    <div class="tab-page" data-page="motion" style="display:none;">
     <h5 data-i18n="secMotion">Motion Physics</h5>
     <div class="chip-row" id="motionChips">
       <div class="chip active" data-motion="normal" data-i18n="motionNormal">Normal</div>
@@ -572,14 +907,12 @@ select{
       <div class="chip" data-motion="radial" data-i18n="motionRadial">Radial Burst</div>
     </div>
 
+    </div>
+    <div class="tab-page" data-page="fluid" style="display:none;">
     <h5 data-i18n="secPhysics">Physics</h5>
     <div class="field">
       <label><span data-i18n="pViscosity">Viscosity</span><span class="val" id="vViscosity">0.30</span></label>
       <input type="range" id="rViscosity" min="0" max="1" step="0.01" value="0.30">
-    </div>
-    <div class="field">
-      <label><span data-i18n="pDamping">Jelly Damping</span><span class="val" id="vDamping">0.92</span></label>
-      <input type="range" id="rDamping" min="0.7" max="0.995" step="0.005" value="0.92">
     </div>
     <div class="field">
       <label><span data-i18n="pDissipation">Color Persistence</span><span class="val" id="vDissipation">0.999</span></label>
@@ -589,20 +922,125 @@ select{
       <label><span data-i18n="pCurl">Swirl / Curl</span><span class="val" id="vCurl">18</span></label>
       <input type="range" id="rCurl" min="0" max="50" step="1" value="18">
     </div>
+    <div class="field">
+      <label><span data-i18n="pTimeScale">Time Scale</span><span class="val" id="vTimeScale">1.0×</span></label>
+      <input type="range" id="rTimeScale" min="0.1" max="2" step="0.1" value="1">
+    </div>
+
+    <h5 data-i18n="secFlow">Ambient Flow</h5>
+    <div class="toggle-row">
+      <span data-i18n="pFlowEnable" style="font-size:12.5px;color:var(--text-dim);">Enable Flow</span>
+      <div class="switch" id="flowEnableSwitch"></div>
+    </div>
+    <div class="field">
+      <label><span data-i18n="pFlowSpeed">Flow Speed</span><span class="val" id="vFlowSpeed">5</span></label>
+      <input type="range" id="rFlowSpeed" min="1" max="10" step="1" value="5">
+    </div>
+    <div class="flow-pad" id="flowPad">
+      <div class="flow-dot" data-dir="nw" title="NW"></div><div class="flow-dot" data-dir="n" title="N"></div><div class="flow-dot" data-dir="ne" title="NE"></div>
+      <div class="flow-dot" data-dir="w" title="W"></div><div class="flow-dot active" data-dir="c" title="None"></div><div class="flow-dot" data-dir="e" title="E"></div>
+      <div class="flow-dot" data-dir="sw" title="SW"></div><div class="flow-dot" data-dir="s" title="S"></div><div class="flow-dot" data-dir="se" title="SE"></div>
+    </div>
+
+    </div>
+    <div class="tab-page" data-page="frame" style="display:none;">
+    <h5 data-i18n="secContainment">Containment</h5>
+    <div class="toggle-row">
+      <span data-i18n="pCanvasFrame" style="font-size:12.5px;color:var(--text-dim);">Canvas Frame</span>
+      <div class="switch" id="canvasFrameSwitch"></div>
+    </div>
+
+    <h5 data-i18n="secRealWater">Realistic Water</h5>
+    <div class="toggle-row">
+      <span data-i18n="pRealWater" style="font-size:12.5px;color:var(--text-dim);">Enable Real Physics</span>
+      <div class="switch" id="realWaterSwitch"></div>
+    </div>
+    <div id="realWaterFields" style="display:none;">
+      <div class="field">
+        <label><span data-i18n="pCohesion">Cohesion (beads up)</span><span class="val" id="vCohesion">5</span></label>
+        <input type="range" id="rCohesion" min="1" max="10" step="1" value="5">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pSplash">Splash on Impact</span><span class="val" id="vSplash">5</span></label>
+        <input type="range" id="rSplash" min="1" max="10" step="1" value="5">
+      </div>
+    </div>
+    </div>
   </div>
 
   <!-- SETTINGS DRAWER — interface only -->
-  <div class="drawer" id="settingsDrawer">
+  <div class="drawer hideable-ui" id="settingsDrawer">
     <h5 data-i18n="secUi">Interface</h5>
     <div class="field">
       <label><span data-i18n="pOpacity">Panel Transparency</span><span class="val" id="vOpacity">62%</span></label>
       <input type="range" id="rOpacity" min="10" max="95" step="1" value="62">
     </div>
+
+    <div class="toggle-row">
+      <span data-i18n="pShowHint" style="font-size:12.5px;color:var(--text-dim);">Show Tool Hint</span>
+      <div class="switch on" id="showHintSwitch"></div>
+    </div>
+
+    <h5 data-i18n="secExport">Export</h5>
+    <div class="mini-grid">
+      <div class="field">
+        <label data-i18n="pFormat">Format</label>
+        <select id="exportFormat">
+          <option value="png">PNG</option>
+          <option value="jpg">JPG</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="pResolution">Resolution</label>
+        <select id="exportResolution">
+          <option value="1">Canvas</option>
+          <option value="1440">1440p</option>
+          <option value="2048">2K</option>
+        </select>
+      </div>
+    </div>
+    <div class="toggle-row" id="transparentRow">
+      <span data-i18n="pTransparentBg" style="font-size:12.5px;color:var(--text-dim);">Transparent BG (water only)</span>
+      <div class="switch" id="transparentSwitch"></div>
+    </div>
+    <div class="chip-row">
+      <div class="chip" id="doExportBtn" data-i18n="btnExport">Export PNG</div>
+      <div class="chip" id="doSaveBtn" data-i18n="btnSaveProject">Save Project</div>
+      <div class="chip" id="doLoadBtn" data-i18n="btnOpenProject">Open Project</div>
+    </div>
+
+    <div class="chip-row">
+      <div class="chip" id="randomizeBtn" data-i18n="btnRandomize">Randomize</div>
+      <div class="chip" id="resetDefaultsBtn" style="color:#ff8a8a; border-color:rgba(255,120,120,0.4);" data-i18n="btnReset">Reset to Default</div>
+    </div>
   </div>
 
   <!-- AUDIO DRAWER — its own dedicated panel, no longer shares space with Settings -->
-  <div class="drawer" id="audioDrawer">
+  <!-- LIBRARY DRAWER — saved works kept in this browser -->
+  <div class="drawer hideable-ui" id="libraryDrawer">
+    <h5 data-i18n="secLibrary">Library</h5>
+    <div class="chip-row">
+      <div class="chip" id="saveToLibraryBtn" data-i18n="btnSaveLibrary">Save current work</div>
+    </div>
+    <div id="libraryList"></div>
+  </div>
+
+  <div class="drawer hideable-ui" id="audioDrawer">
     <h5 data-i18n="secAudio">Audio</h5>
+    <div class="audio-pod">
+      <button class="pod-btn" id="audioPlayBtn">
+        <svg id="playIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <div class="audio-viz" id="audioViz"></div>
+      <div class="track-name" id="trackName">Midnight Chill</div>
+      <button class="pod-btn" id="audioNextBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l10 7-10 7V5zM17 5h2v14h-2z"/></svg>
+      </button>
+    </div>
+    <div class="field">
+      <label><span data-i18n="pReactivity">Reactivity</span><span class="val" id="vReactivity">5</span></label>
+      <input type="range" id="rReactivity" min="1" max="10" step="1" value="5">
+    </div>
     <div class="toggle-row">
       <span data-i18n="pMute" style="font-size:12.5px;color:var(--text-dim);">Mute Audio</span>
       <div class="switch" id="muteSwitch"></div>
@@ -622,18 +1060,17 @@ select{
     </div>
   </div>
 
-  <div class="bottom-cluster">
-  <div class="audio-pod">
-    <button class="pod-btn" id="audioPlayBtn">
-      <svg id="playIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-    </button>
-    <div class="audio-viz" id="audioViz"></div>
-    <div class="track-name" id="trackName">Midnight Chill</div>
-    <button class="pod-btn" id="audioNextBtn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l10 7-10 7V5zM17 5h2v14h-2z"/></svg>
-    </button>
+  <div class="bottom-cluster hideable-ui">
+  <div class="undo-redo-row">
+    <div class="icon-btn" id="undoBtn" title="Undo">
+      <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+    </div>
+    <div class="icon-btn" id="redoBtn" title="Redo">
+      <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+    </div>
   </div>
   <div class="dock-wrap">
+    <div class="dock-arrow" id="dockLeft">‹</div>
     <div class="dock" id="dock">
       <div class="dock-icon active" data-tool="paint" title="Paint">
         <span class="tip" data-i18n="toolPaint">Paint</span>
@@ -646,6 +1083,14 @@ select{
       <div class="dock-icon" data-tool="stretch" title="Stretch">
         <span class="tip" data-i18n="toolStretch">Stretch Color</span>
         <svg viewBox="0 0 24 24" stroke-width="1.7"><path d="M4 12c2-4 4-4 6 0s4 4 6 0"/><path d="M3 7l2 5-2 5"/><path d="M21 7l-2 5 2 5"/></svg>
+      </div>
+      <div class="dock-icon" data-tool="eraser" title="Eraser">
+        <span class="tip" data-i18n="toolEraser">Eraser</span>
+        <svg viewBox="0 0 24 24" stroke-width="1.7"><path d="M4.5 16.5L12.5 8.5a2.4 2.4 0 0 1 3.4 0l3.6 3.6a2.4 2.4 0 0 1 0 3.4l-5 5H7.5l-3-3z"/><path d="M9 20.5h11"/></svg>
+      </div>
+      <div class="dock-icon" data-tool="picker" title="Eyedropper">
+        <span class="tip" data-i18n="toolPicker">Eyedropper</span>
+        <svg viewBox="0 0 24 24" stroke-width="1.7"><path d="M18.4 2.6a2.6 2.6 0 0 1 3 3l-3.1 3.1 1 1-2 2-1-1-8.1 8.1L4 20l1.2-4.2 8.1-8.1-1-1 2-2 1 1z"/></svg>
       </div>
       <div class="dock-sep"></div>
       <div class="dock-icon" id="dockPalette" title="Mood Presets">
@@ -666,12 +1111,50 @@ select{
         <svg viewBox="0 0 24 24" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </div>
     </div>
+    <div class="dock-arrow" id="dockRight">›</div>
   </div>
   </div>
 
 </div>
 
 <script>
+/* ============================================================
+   ON-SCREEN ERROR REPORTER
+   Mobile browsers hide real error details behind a generic
+   "Script error." — this surfaces the actual message, file and line
+   directly on screen so problems can be diagnosed without a desktop.
+   Tap the box to dismiss it.
+============================================================ */
+(function errorReporter(){
+  function show(text){
+    let box = document.getElementById('errBox');
+    if(!box){
+      box = document.createElement('div');
+      box.id = 'errBox';
+      box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;'+
+        'background:rgba(150,20,35,0.97);color:#fff;font:12px/1.45 monospace;'+
+        'padding:10px 12px;border-radius:10px;max-height:45vh;overflow:auto;'+
+        'white-space:pre-wrap;word-break:break-word;box-shadow:0 6px 26px rgba(0,0,0,.5)';
+      box.onclick = ()=> box.remove();
+      document.body.appendChild(box);
+    }
+    box.textContent = (box.textContent ? box.textContent + '\n\n' : '') + text;
+  }
+  window.addEventListener('error', function(e){
+    if(e.message === 'Script error.' && !e.filename){
+      show('Script error (details hidden by browser)');
+      return;
+    }
+    show('ERROR: ' + e.message + '\n@ line ' + e.lineno + ':' + e.colno +
+         (e.error && e.error.stack ? '\n' + e.error.stack.split('\n').slice(0,4).join('\n') : ''));
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    const r = e.reason;
+    show('PROMISE ERROR: ' + (r && r.message ? r.message : String(r)) +
+         (r && r.stack ? '\n' + r.stack.split('\n').slice(0,4).join('\n') : ''));
+  });
+  window.__novaShowError = show;
+})();
 /* ============================================================
    I18N
 ============================================================ */
@@ -682,24 +1165,78 @@ en:{
   heroTitle:'Hello!<br>Make it <em>fluid.</em>',
   heroSub:"An audio-reactive canvas where fluid dynamics, soft-body physics and generative color live inside a single browser tab. Draw, listen, and let the two shape each other.",
   heroCta:"Enter the Studio", heroGhost:"How it works →", scrollCue:"SCROLL",
-  menuEyebrow:"CHOOSE YOUR PATH", menuTitle:"Where would you like to begin?",
+  menuEyebrow:"CHOOSE YOUR PATH", menuTitle:"Where would you like to begin?", menuScrollHint:"Scroll down to read the guide",
   menuStartTitle:"Start Studio", menuStartDesc:"Jump straight into the live canvas — fluid wisps, jelly physics, ripple waves and full audio reactivity, ready to touch.", menuStartGo:"Launch workspace",
   menuHowTitle:"How to Use", menuHowDesc:"A short walkthrough of tools, gestures and sound before you dive in.", menuHowGo:"View guide",
   howtoTitle:"Three things to know", backToMenu:"Back to menu",
   step1Title:"Draw & drag", step1Desc:"Click or touch the canvas and drag to inject color into the fluid field. Change color mid-stroke and it blends physically where the paths cross.",
   step2Title:"Pick a tool & motion", step2Desc:"The dock at the bottom holds art modes, motion physics (spin, zig-zag, ripple, dispersion), jelly bodies and lighting — hover to expand, like a macOS dock.",
   step3Title:"Play with sound", step3Desc:"Pick a Lo-Fi track from the audio pod — the fluid's force, ripple intensity and neon glow all pulse in sync with its frequencies in real time.",
-  secArt:"Art Mode", modeFluid:"Fluid Wisps", modeVoronoi:"Geometric Grid", modeParticle:"Particle Flow", modeGeo:"Geometric Art", modeLineArt:"Line Art", pLineCount:"Line Count",
-  modePool:"Color Pool", modeBlackhole:"Black Hole", modeSparks:"Sparks",
+  secArt:"Art Mode", modeFluid:"Fluid Wisps", modeVoronoi:"Geometric Grid", modeParticle:"Particle Flow", modeGeo:"Geometric Art", modeLineArt:"Line Art", pLineCount:"Line Count", pBhLevel:"Suction Level", pBhSpeed:"Suction Speed",
+  modePool:"Color Pool", modeBlackhole:"Black Hole", modeSparks:"Sparks", modeFishtank:"Fish Tank",
+  secFlow:"Ambient Flow", pFlowEnable:"Enable Flow", pFlowSpeed:"Flow Speed", pReactivity:"Reactivity",
+  pTimeScale:"Time Scale", btnRandomize:"Randomize",
+  pPtSize:"Particle Size", pPtSpeed:"Particle Speed", pPtCount:"Particle Count", pPtTrail:"Trail Persistence",
+  pPtAlpha:"Particle Opacity", pPtColors:"Colour Count", btnPtRandomColors:"Randomise particle colours",
+  pPtInteract:"Water Interaction", pPtInteractAmt:"Interaction Strength",
+  ptiNone:"None", ptiAbsorb:"Absorb paint colour", ptiDeposit:"Paint into the water", ptiBounce:"Scatter off the paint", ptiCarry:"Carried by the current",
+  pVoroScale:"Cell Size", pVoroSpeed:"Cell Motion", pVoroEdge:"Edge Softness",
+  secContainment:"Containment", pCanvasFrame:"Canvas Frame",
+  secRealWater:"Realistic Water", pRealWater:"Enable Real Physics", pCohesion:"Cohesion (beads up)", pSplash:"Splash on Impact",
   secMotion:"Motion Physics", motionNormal:"Normal", motionSpin:"Spin", motionZigzag:"Zig-Zag", motionWave:"Wave Ripple", motionRadial:"Radial Burst",
-  secMood:"Mood Presets", secPhysics:"Physics", pViscosity:"Viscosity", pDamping:"Jelly Damping", pDissipation:"Dissipation", pCurl:"Swirl / Curl",
+  secMood:"Mood Presets", secPhysics:"Physics", pViscosity:"Viscosity", pDamping:"Jelly Damping", pJellyStretch:"Jelly Stretch", pDissipation:"Dissipation", pCurl:"Swirl / Curl",
   secColor:"Color & Background", pBrush:"Brush Color", pBg:"Background", pBrushSize:"Brush Size",
   secLights:"UV Corner Lighting", pGlow:"Glow Intensity",
+  secWater:"Water Texture", pWispiness:"Sharpness / Wispiness", pClarity:"Clarity",
   secUi:"Interface", secAudio:"Audio", pOpacity:"Panel Transparency", pMute:"Mute Audio", pVolume:"Master Volume", pSfx:"SFX Palette",
+  pBgGradient:"Gradient Background", pBg2:"Second Colour", pBgAngle:"Gradient Angle",
+  btnSavePreset:"Save current look", presetEmpty:"No saved looks yet.",
+  tabArt:"Art", tabMotion:"Motion", tabFluid:"Fluid", tabFrame:"Frame",
+  htTools:"Toolbar", htTop:"Top bar", htModes:"Art modes",
+  gPaintT:"Paint", gPaintD:"Drag to pour colour into the fluid.",
+  gRippleT:"Water Ripple", gRippleD:"Tap to send a ripple outward from that point.",
+  gStretchT:"Stretch Colour", gStretchD:"Drag to knead paint that's already there, like clay.",
+  gEraserT:"Eraser", gEraserD:"Drag to remove paint from just that spot.",
+  gPickerT:"Eyedropper", gPickerD:"Tap to pick up a blended colour and paint with it.",
+  gPaletteT:"Palette", gPaletteD:"Symmetry, canvas style, mood presets, brush colour and lighting.",
+  gPhysicsT:"Physics", gPhysicsD:"Art mode, motion, fluid feel, flow direction and containment.",
+  gAudioT:"Music", gAudioD:"Lo-Fi tracks, volume, sound effects and how strongly art reacts.",
+  gSettingsT:"Settings", gSettingsD:"Panel opacity, export options, save/open and reset.",
+  gExitT:"Back", gExitD:"Leave the studio and return to the home pages.",
+  gLangT:"Language", gLangD:"Switch between English and Thai.",
+  gClearT:"Clear", gClearD:"Wipe the whole canvas and start again.",
+  gExportT:"Export", gExportD:"Save the artwork as a PNG or JPG image.",
+  gRecordT:"Record", gRecordD:"Record a video of the moving artwork. Tap again to stop.",
+  gSaveT:"Save", gSaveD:"Store the piece in your Library so you can carry on later.",
+  gOpenT:"Open", gOpenD:"Load a project file you saved earlier.",
+  gLibraryT:"Library", gLibraryD:"Browse and reopen works you've saved.",
+  gSettingsTopT:"Settings", gSettingsTopD:"Same settings panel as the dock gear.",
+  gHideT:"Hide UI", gHideD:"Hide every panel for a clean view. Tap again to bring them back.",
+  gFreezeT:"Freeze", gFreezeD:"Stop all motion so you can export a still frame.",
+  gUndoT:"Undo", gUndoD:"Step back one action.",
+  gRedoT:"Redo", gRedoD:"Step forward again.",
+  mFluidT:"Fluid Wisps", mFluidD:"Classic flowing smoke-like paint.",
+  mVoronoiT:"Geometric Grid", mVoronoiD:"Breaks the art into moving cells, like stained glass.",
+  mParticleT:"Particle Flow", mParticleD:"A drifting particle field that can react to the paint.",
+  mGeoT:"Geometric Art", mGeoD:"Tap to drop rotating star and chord patterns.",
+  mLineArtT:"Line Art", mLineArtD:"Hold to grow spokes that lengthen into waves and zig-zags.",
+  mPoolT:"Color Pool", mPoolD:"Hold to pour — the puddle grows and spreads outward.",
+  mBlackholeT:"Black Hole", mBlackholeD:"Tap to make a core that pulls surrounding colour into a spiral.",
+  mSparksT:"Sparks", mSparksD:"Ember-like specks that scatter and settle permanently.",
+  mFishtankT:"Fish Tank", mFishtankD:"Poured colour has weight and sinks like ink in water.",
+  secLibrary:"Library", btnSaveLibrary:"Save current work", libEmpty:"No saved works yet.",
+  previewHint:"Press and hold the image to save it to your photos.",
+  pShowHint:"Show Tool Hint",
+  secExport:"Export", pFormat:"Format", pResolution:"Resolution", pTransparentBg:"Transparent BG (water only)",
   sfxNumnim:"Numnim (squishy)", sfxUnderwater:"Underwater muffled", sfxCrystal:"Crystal chimes", sfxElectronic:"Soft electronic",
-  toolPaint:"Paint", toolJelly:"Jelly / Soft-Body", toolRipple:"Water Ripple", toolStretch:"Stretch Color", toolMood:"Mood Presets", toolPhysics:"Physics", toolAudio:"Audio Tracks", toolSettings:"Settings",
-  btnClear:"Clear", btnExport:"Export PNG",
-  statusPaint:"Paint", statusJelly:"Jelly / Soft-Body", statusRipple:"Water Ripple", statusStretch:"Stretch Color",
+  toolPaint:"Paint", toolJelly:"Jelly / Soft-Body", toolRipple:"Water Ripple", toolStretch:"Stretch Color", toolEraser:"Eraser", toolPicker:"Eyedropper", toolMood:"Mood Presets", toolPhysics:"Physics", toolAudio:"Audio Tracks", toolSettings:"Settings",
+  pTextureBehind:"Texture Behind Water",
+  secCanvasStyle:"Canvas Style", csPlain:"Plain", csPaper:"Paper", csGrid:"Grid", csIso:"Isometric",
+  secSymmetry:"Symmetry", symOff:"Off", pMirror:"Mirror Axis", pGradientBrush:"Gradient Brush", pGradientSpeed:"Gradient Speed",
+  btnSaveProject:"Save Project", btnOpenProject:"Open Project",
+  btnClear:"Clear", btnExport:"Export PNG", btnFreeze:"Freeze", btnResume:"Resume", btnReset:"Reset to Default",
+  statusPaint:"Paint", statusJelly:"Jelly / Soft-Body", statusRipple:"Water Ripple", statusStretch:"Stretch Color", statusEraser:"Eraser", statusPicker:"Eyedropper",
+  statusHintEraser:"drag to erase paint", statusHintPicker:"tap to pick a blended colour",
   statusHintPaint:"click & drag to paint", statusHintJelly:"drag nodes to stretch", statusHintRipple:"tap to send a ripple", statusHintStretch:"drag to knead the paint like clay",
   statusNone:"No tool selected", statusHintNone:"tap a dock icon to start",
 },
@@ -709,24 +1246,78 @@ th:{
   heroTitle:'สวัสดี!<br>สร้างให้ <em>ลื่นไหล</em>',
   heroSub:"แคนวาสที่ตอบสนองต่อเสียงเพลง ผสานพลศาสตร์ของไหล ฟิสิกส์ตัวนุ่ม และสีที่เกิดขึ้นเองในไฟล์เดียวบนเบราว์เซอร์ วาด ฟัง แล้วปล่อยให้ทั้งสองสิ่งหล่อหลอมกัน",
   heroCta:"เข้าสู่สตูดิโอ", heroGhost:"ดูวิธีทำงาน →", scrollCue:"เลื่อนลง",
-  menuEyebrow:"เลือกเส้นทางของคุณ", menuTitle:"อยากเริ่มต้นจากตรงไหน?",
+  menuEyebrow:"เลือกเส้นทางของคุณ", menuTitle:"อยากเริ่มต้นจากตรงไหน?", menuScrollHint:"เลื่อนลงเพื่ออ่านคู่มือ",
   menuStartTitle:"เริ่มสตูดิโอ", menuStartDesc:"กระโดดเข้าสู่แคนวาสสดทันที — สายหมอกของไหล ฟิสิกส์เยลลี่ คลื่นระลอกน้ำ และเสียงตอบสนองแบบเต็มรูปแบบ", menuStartGo:"เปิดพื้นที่ทำงาน",
   menuHowTitle:"วิธีใช้งาน", menuHowDesc:"คำแนะนำสั้นๆ เกี่ยวกับเครื่องมือ ท่าทาง และเสียง ก่อนเริ่มใช้งานจริง", menuHowGo:"ดูคู่มือ",
   howtoTitle:"สามสิ่งที่ควรรู้", backToMenu:"กลับไปที่เมนู",
   step1Title:"วาดและลาก", step1Desc:"คลิกหรือแตะที่แคนวาสแล้วลากเพื่อฉีดสีลงในสนามของไหล เปลี่ยนสีระหว่างลากแล้วมันจะผสมกันตรงจุดที่เส้นทางตัดกัน",
   step2Title:"เลือกเครื่องมือและการเคลื่อนไหว", step2Desc:"ด็อกด้านล่างมีโหมดศิลปะ ฟิสิกส์การเคลื่อนไหว (หมุน ซิกแซก ระลอกคลื่น กระจายตัว) ตัวเยลลี่ และแสง — เลื่อนเมาส์ผ่านเพื่อขยาย เหมือนด็อกของ macOS",
   step3Title:"เล่นกับเสียง", step3Desc:"เลือกเพลง Lo-Fi จากแผงเสียง — แรงของของไหล ความเข้มของระลอกคลื่น และแสงนีออนจะเต้นตามจังหวะความถี่แบบเรียลไทม์",
-  secArt:"โหมดศิลปะ", modeFluid:"สายหมอกของไหล", modeVoronoi:"กริดเรขาคณิต", modeParticle:"กระแสอนุภาค", modeGeo:"ศิลปะเรขาคณิต", modeLineArt:"ศิลปะเส้น", pLineCount:"จำนวนเส้น",
-  modePool:"หลุมกระจายสี", modeBlackhole:"หลุมดำ", modeSparks:"ประกายไฟ",
+  secArt:"โหมดศิลปะ", modeFluid:"สายหมอกของไหล", modeVoronoi:"กริดเรขาคณิต", modeParticle:"กระแสอนุภาค", modeGeo:"ศิลปะเรขาคณิต", modeLineArt:"ศิลปะเส้น", pLineCount:"จำนวนเส้น", pBhLevel:"ระดับการดูด", pBhSpeed:"ความเร็วการดูด",
+  modePool:"หลุมกระจายสี", modeBlackhole:"หลุมดำ", modeSparks:"ประกายไฟ", modeFishtank:"ตู้ปลา",
+  secFlow:"การไหลโดยรอบ", pFlowEnable:"เปิดการไหล", pFlowSpeed:"ความเร็วการไหล", pReactivity:"ตอบสนองเพลง",
+  pTimeScale:"ความเร็วเวลา", btnRandomize:"สุ่มผลงาน",
+  pPtSize:"ขนาดอนุภาค", pPtSpeed:"ความเร็วอนุภาค", pPtCount:"จำนวนอนุภาค", pPtTrail:"ความคงอยู่ของเส้นทาง",
+  pPtAlpha:"ความทึบอนุภาค", pPtColors:"จำนวนสี", btnPtRandomColors:"สุ่มสีอนุภาค",
+  pPtInteract:"ปฏิสัมพันธ์กับน้ำ", pPtInteractAmt:"ความแรงของปฏิสัมพันธ์",
+  ptiNone:"ไม่มี", ptiAbsorb:"ดูดสีจากน้ำ", ptiDeposit:"ปล่อยสีลงในน้ำ", ptiBounce:"กระเด็นเมื่อชนสี", ptiCarry:"ไหลไปตามกระแสน้ำ",
+  pVoroScale:"ขนาดช่อง", pVoroSpeed:"การเคลื่อนไหวช่อง", pVoroEdge:"ความนุ่มของขอบ",
+  secContainment:"กรอบกักสี", pCanvasFrame:"กรอบ Canvas",
+  secRealWater:"น้ำสมจริง", pRealWater:"เปิดฟิสิกส์จริง", pCohesion:"การจับตัวเป็นก้อน", pSplash:"การกระจายเมื่อชน",
   secMotion:"ฟิสิกส์การเคลื่อนไหว", motionNormal:"ปกติ", motionSpin:"หมุน", motionZigzag:"ซิกแซก", motionWave:"ระลอกคลื่น", motionRadial:"ระเบิดรัศมี",
-  secMood:"พรีเซ็ตอารมณ์", secPhysics:"ฟิสิกส์", pViscosity:"ความหนืด", pDamping:"การหน่วงเยลลี่", pDissipation:"การสลายตัว", pCurl:"การหมุนวน",
+  secMood:"พรีเซ็ตอารมณ์", secPhysics:"ฟิสิกส์", pViscosity:"ความหนืด", pDamping:"การหน่วงเยลลี่", pJellyStretch:"ความยืดเยลลี่", pDissipation:"การสลายตัว", pCurl:"การหมุนวน",
   secColor:"สีและพื้นหลัง", pBrush:"สีพู่กัน", pBg:"พื้นหลัง", pBrushSize:"ขนาดหัวแปรง",
   secLights:"ไฟมุม UV", pGlow:"ความเข้มแสงเรือง",
+  secWater:"เนื้อสัมผัสของน้ำ", pWispiness:"ความคม / ความฟุ้ง", pClarity:"ความคมชัด",
   secUi:"อินเทอร์เฟซ", secAudio:"เสียง", pOpacity:"ความโปร่งใสแผง", pMute:"ปิดเสียง", pVolume:"ระดับเสียงหลัก", pSfx:"ชุดเสียงเอฟเฟกต์",
+  pBgGradient:"พื้นหลังไล่สี", pBg2:"สีที่สอง", pBgAngle:"มุมไล่สี",
+  btnSavePreset:"บันทึกลุคปัจจุบัน", presetEmpty:"ยังไม่มีลุคที่บันทึกไว้",
+  tabArt:"ศิลปะ", tabMotion:"เคลื่อนไหว", tabFluid:"ของไหล", tabFrame:"กรอบ",
+  htTools:"แถบเครื่องมือ", htTop:"แถบด้านบน", htModes:"โหมดศิลปะ",
+  gPaintT:"วาด", gPaintD:"ลากเพื่อเทสีลงในของไหล",
+  gRippleT:"ระลอกน้ำ", gRippleD:"แตะเพื่อส่งคลื่นกระจายออกจากจุดนั้น",
+  gStretchT:"ยืดสี", gStretchD:"ลากเพื่อนวดสีที่มีอยู่แล้ว เหมือนดินน้ำมัน",
+  gEraserT:"ยางลบ", gEraserD:"ลากเพื่อลบสีเฉพาะบริเวณนั้น",
+  gPickerT:"หลอดดูดสี", gPickerD:"แตะเพื่อดูดสีที่ผสมกันแล้วมาใช้วาดต่อ",
+  gPaletteT:"จานสี", gPaletteD:"สมมาตร พื้นผิว canvas พรีเซ็ตอารมณ์ สีพู่กัน และแสง",
+  gPhysicsT:"ฟิสิกส์", gPhysicsD:"โหมดศิลปะ การเคลื่อนไหว ความรู้สึกของน้ำ ทิศทางไหล และกรอบ",
+  gAudioT:"เพลง", gAudioD:"เพลง Lo-Fi ระดับเสียง เสียงเอฟเฟกต์ และความแรงที่ภาพตอบสนอง",
+  gSettingsT:"ตั้งค่า", gSettingsD:"ความโปร่งใสแผง ตัวเลือกส่งออก บันทึก/เปิด และรีเซ็ต",
+  gExitT:"ย้อนกลับ", gExitD:"ออกจากสตูดิโอ กลับไปหน้าแรก",
+  gLangT:"ภาษา", gLangD:"สลับระหว่างอังกฤษและไทย",
+  gClearT:"ล้าง", gClearD:"ล้างแคนวาสทั้งหมดแล้วเริ่มใหม่",
+  gExportT:"ส่งออก", gExportD:"บันทึกผลงานเป็นภาพ PNG หรือ JPG",
+  gRecordT:"อัดวิดีโอ", gRecordD:"อัดคลิปภาพที่กำลังเคลื่อนไหว กดอีกครั้งเพื่อหยุด",
+  gSaveT:"บันทึก", gSaveD:"เก็บผลงานลงคลัง เพื่อกลับมาทำต่อภายหลัง",
+  gOpenT:"เปิดไฟล์", gOpenD:"เปิดไฟล์ผลงานที่บันทึกไว้ก่อนหน้า",
+  gLibraryT:"คลังผลงาน", gLibraryD:"ดูและเปิดผลงานที่เคยบันทึกไว้",
+  gSettingsTopT:"ตั้งค่า", gSettingsTopD:"แผงตั้งค่าเดียวกับไอคอนฟันเฟืองในแถบล่าง",
+  gHideT:"ซ่อน UI", gHideD:"ซ่อนทุกแผงเพื่อดูภาพเต็มๆ กดอีกครั้งเพื่อเรียกกลับ",
+  gFreezeT:"หยุดภาพ", gFreezeD:"หยุดการเคลื่อนไหวทั้งหมด เพื่อบันทึกภาพนิ่ง",
+  gUndoT:"ย้อนกลับ", gUndoD:"ย้อนกลับหนึ่งขั้น",
+  gRedoT:"ทำซ้ำ", gRedoD:"เดินหน้ากลับไปหนึ่งขั้น",
+  mFluidT:"สายหมอกของไหล", mFluidD:"สีไหลลื่นคล้ายควัน แบบคลาสสิก",
+  mVoronoiT:"กริดเรขาคณิต", mVoronoiD:"แตกภาพเป็นช่องเคลื่อนไหว คล้ายกระจกสี",
+  mParticleT:"กระแสอนุภาค", mParticleD:"สนามอนุภาคลอยไหล ตอบสนองกับสีน้ำได้",
+  mGeoT:"ศิลปะเรขาคณิต", mGeoD:"แตะเพื่อวางลายดาวและเส้นเชื่อมที่หมุนได้",
+  mLineArtT:"ศิลปะเส้น", mLineArtD:"กดค้างให้เส้นยาวขึ้นจนกลายเป็นคลื่นและซิกแซก",
+  mPoolT:"หลุมกระจายสี", mPoolD:"กดค้างเพื่อเท แอ่งสีจะโตและกระจายออก",
+  mBlackholeT:"หลุมดำ", mBlackholeD:"แตะเพื่อสร้างแกนที่ดูดสีรอบข้างเข้าเป็นเกลียว",
+  mSparksT:"ประกายไฟ", mSparksD:"เม็ดประกายกระจายออกแล้วค้างอยู่ถาวร",
+  mFishtankT:"ตู้ปลา", mFishtankD:"สีที่เทมีน้ำหนักและจมลงเหมือนหมึกในน้ำ",
+  secLibrary:"คลังผลงาน", btnSaveLibrary:"บันทึกผลงานปัจจุบัน", libEmpty:"ยังไม่มีผลงานที่บันทึกไว้",
+  previewHint:"กดค้างที่รูปเพื่อบันทึกลงคลังภาพ",
+  pShowHint:"แสดงคำอธิบายเครื่องมือ",
+  secExport:"ส่งออก", pFormat:"รูปแบบไฟล์", pResolution:"ความละเอียด", pTransparentBg:"พื้นหลังโปร่งใส (เฉพาะน้ำ)",
   sfxNumnim:"หนึบนุ่ม (Numnim)", sfxUnderwater:"อู้อี้ใต้น้ำ", sfxCrystal:"กรุ๊งกริ๊งคริสตัล", sfxElectronic:"อิเล็กทรอนิกส์นุ่มนวล",
-  toolPaint:"วาด", toolJelly:"เยลลี่ / ตัวนุ่ม", toolRipple:"ระลอกน้ำ", toolStretch:"ยืดสี", toolMood:"พรีเซ็ตอารมณ์", toolPhysics:"ฟิสิกส์", toolAudio:"เพลง", toolSettings:"ตั้งค่า",
-  btnClear:"ล้าง", btnExport:"ส่งออก PNG",
-  statusPaint:"วาด", statusJelly:"เยลลี่ / ตัวนุ่ม", statusRipple:"ระลอกน้ำ", statusStretch:"ยืดสี",
+  toolPaint:"วาด", toolJelly:"เยลลี่ / ตัวนุ่ม", toolRipple:"ระลอกน้ำ", toolStretch:"ยืดสี", toolEraser:"ยางลบ", toolPicker:"หลอดดูดสี", toolMood:"พรีเซ็ตอารมณ์", toolPhysics:"ฟิสิกส์", toolAudio:"เพลง", toolSettings:"ตั้งค่า",
+  pTextureBehind:"พื้นผิวอยู่ใต้น้ำ",
+  secCanvasStyle:"พื้นผิว Canvas", csPlain:"เรียบ", csPaper:"กระดาษ", csGrid:"ตาราง", csIso:"ไอโซเมตริก",
+  secSymmetry:"สมมาตร", symOff:"ปิด", pMirror:"สะท้อนแกน", pGradientBrush:"พู่กันไล่เฉดสี", pGradientSpeed:"ความเร็วไล่สี",
+  btnSaveProject:"บันทึกผลงาน", btnOpenProject:"เปิดผลงาน",
+  btnClear:"ล้าง", btnExport:"ส่งออก PNG", btnFreeze:"หยุด", btnResume:"เล่นต่อ", btnReset:"รีเซ็ตค่าเริ่มต้น",
+  statusPaint:"วาด", statusJelly:"เยลลี่ / ตัวนุ่ม", statusRipple:"ระลอกน้ำ", statusStretch:"ยืดสี", statusEraser:"ยางลบ", statusPicker:"หลอดดูดสี",
+  statusHintEraser:"ลากเพื่อลบสี", statusHintPicker:"แตะเพื่อดูดสีที่ผสมแล้ว",
   statusHintPaint:"คลิกและลากเพื่อวาด", statusHintJelly:"ลากจุดเพื่อยืด", statusHintRipple:"แตะเพื่อส่งระลอกคลื่น", statusHintStretch:"ลากเพื่อนวดสีเหมือนดินน้ำมัน",
   statusNone:"ยังไม่ได้เลือกเครื่องมือ", statusHintNone:"แตะไอคอนด้านล่างเพื่อเริ่ม",
 }
@@ -749,6 +1340,7 @@ function applyI18n(){
   document.getElementById('langEn').classList.toggle('active', currentLang==='en');
   document.getElementById('langTh').classList.toggle('active', currentLang==='th');
   updateToolStatus();
+  if(typeof buildGuides === 'function') buildGuides();
 }
 document.getElementById('langEn').onclick = ()=>{currentLang='en'; applyI18n();};
 document.getElementById('langTh').onclick = ()=>{currentLang='th'; applyI18n();};
@@ -770,18 +1362,227 @@ function scatterDots(container, count){
 scatterDots(document.getElementById('dotsHero'), 26);
 
 /* ============================================================
+   HOW-TO TOOL REFERENCE
+   Built from the real dock/top-bar buttons, so the icons shown here are
+   always the exact same graphics used in the studio — they can never drift
+   out of sync with the actual interface.
+============================================================ */
+const GUIDE_TOOLS = [
+  ['[data-tool="paint"]',   'gPaint'],
+  ['[data-tool="ripple"]',  'gRipple'],
+  ['[data-tool="stretch"]', 'gStretch'],
+  ['[data-tool="eraser"]',  'gEraser'],
+  ['[data-tool="picker"]',  'gPicker'],
+  ['#dockPalette',          'gPalette'],
+  ['#dockPhysics',          'gPhysics'],
+  ['#dockAudio',            'gAudio'],
+  ['#dockSettings',         'gSettings']
+];
+const GUIDE_TOP = [
+  ['#exitStudio',      'gExit'],
+  ['#langToggleStudio','gLang'],
+  ['#clearCanvasBtn',  'gClear'],
+  ['#exportBtn',       'gExport'],
+  ['#recordBtn',       'gRecord'],
+  ['#saveProjectBtn',  'gSave'],
+  ['#loadProjectBtn',  'gOpen'],
+  ['#libraryBtn',      'gLibrary'],
+  ['#openSettings',    'gSettingsTop'],
+  ['#hideUiBtn',       'gHide'],
+  ['#stopPlayBtn',     'gFreeze'],
+  ['#undoBtn',         'gUndo'],
+  ['#redoBtn',         'gRedo']
+];
+const GUIDE_MODES = ['mFluid','mVoronoi','mParticle','mGeo','mLineArt','mPool','mBlackhole','mSparks','mFishtank'];
+const MODE_ICON = '<svg viewBox="0 0 24 24" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18"/></svg>';
+
+function buildGuideRow(iconHTML, titleKey){
+  const dict = I18N[currentLang];
+  const row = document.createElement('div');
+  row.className = 'tg-item';
+  const ico = document.createElement('div');
+  ico.className = 'tg-ico';
+  ico.innerHTML = iconHTML;
+  const txt = document.createElement('div');
+  txt.className = 'tg-txt';
+  const b = document.createElement('b');
+  b.textContent = dict[titleKey + 'T'] || titleKey;
+  const s = document.createElement('small');
+  s.textContent = dict[titleKey + 'D'] || '';
+  txt.appendChild(b); txt.appendChild(s);
+  row.appendChild(ico); row.appendChild(txt);
+  return row;
+}
+function buildGuides(){
+  const tools = document.getElementById('guideTools');
+  const top = document.getElementById('guideTop');
+  const modes = document.getElementById('guideModes');
+  if(!tools || !top || !modes) return;
+  tools.innerHTML = ''; top.innerHTML = ''; modes.innerHTML = '';
+
+  GUIDE_TOOLS.forEach(([sel, key])=>{
+    const src = document.querySelector('#dock ' + sel) || document.querySelector(sel);
+    const svg = src ? src.querySelector('svg') : null;
+    tools.appendChild(buildGuideRow(svg ? svg.outerHTML : MODE_ICON, key));
+  });
+  GUIDE_TOP.forEach(([sel, key])=>{
+    const src = document.querySelector(sel);
+    const svg = src ? src.querySelector('svg') : null;
+    top.appendChild(buildGuideRow(svg ? svg.outerHTML : MODE_ICON, key));
+  });
+  GUIDE_MODES.forEach(key=> modes.appendChild(buildGuideRow(MODE_ICON, key)));
+}
+
+/* ============================================================
+   FLOATING CYBERPUNK BACKGROUND SHAPES
+   Blurred purple/cyan blobs that idle-drift on their own, gently
+   parallax with the cursor, and zoom + rotate as the page scrolls.
+============================================================ */
+(function bgShapesSystem(){
+  const host = document.getElementById('bgShapes');
+  if(!host) return;
+  const palette = [
+    ['rgba(124,63,224,0.55)','rgba(124,63,224,0)'],   // purple
+    ['rgba(0,240,255,0.5)','rgba(0,240,255,0)'],       // cyan
+    ['rgba(90,36,173,0.5)','rgba(90,36,173,0)'],       // deep purple
+    ['rgba(0,184,201,0.45)','rgba(0,184,201,0)'],      // cyan-dim
+  ];
+  const shapeCount = window.innerWidth < 700 ? 5 : 8;
+  const shapes = [];
+  for(let i=0;i<shapeCount;i++){
+    const outer = document.createElement('div');
+    outer.className = 'shape-outer';
+    const size = 140 + Math.random()*220;
+    const left = Math.random()*100, top = Math.random()*100;
+    outer.style.left = left+'%';
+    outer.style.top = top+'%';
+    const inner = document.createElement('div');
+    const isCircle = Math.random() < 0.55;
+    inner.className = 'shape-inner ' + (isCircle ? 'is-circle' : 'is-square');
+    inner.style.width = size+'px';
+    inner.style.height = size+'px';
+    const [c1,c2] = palette[i % palette.length];
+    inner.style.background = `radial-gradient(circle, ${c1} 0%, ${c2} 70%)`;
+    inner.style.animationDuration = (12 + Math.random()*10)+'s';
+    outer.appendChild(inner);
+    host.appendChild(outer);
+    shapes.push({el:outer, depth: 0.3 + Math.random()*0.7, baseLeft:left, baseTop:top});
+  }
+
+  let mouseX = 0.5, mouseY = 0.5;
+  let scrollProgress = 0;
+  function applyTransforms(){
+    shapes.forEach(s=>{
+      const px = (mouseX-0.5) * 60 * s.depth;
+      const py = (mouseY-0.5) * 60 * s.depth;
+      const scale = 1 + scrollProgress*0.5*s.depth;
+      const rotate = scrollProgress * 50 * s.depth;
+      s.el.style.transform = `translate(${px}px, ${py}px) scale(${scale}) rotate(${rotate}deg)`;
+    });
+  }
+  window.addEventListener('mousemove', e=>{
+    if(document.getElementById('studio').classList.contains('active')) return;
+    mouseX = e.clientX / window.innerWidth;
+    mouseY = e.clientY / window.innerHeight;
+    applyTransforms();
+  });
+  const flowEl = document.getElementById('flow');
+  flowEl.addEventListener('scroll', ()=>{
+    const max = flowEl.scrollHeight - flowEl.clientHeight;
+    scrollProgress = max > 0 ? Math.min(1, flowEl.scrollTop / max) : 0;
+    applyTransforms();
+  });
+})();
+
+/* Neon dust — tiny glowing particles drifting across the landing pages,
+   nudged away from the cursor / a finger drag. Paused while the studio
+   workspace is open. */
+(function neonDustSystem(){
+  const canvas = document.getElementById('dustCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let dust = [];
+  function resizeDust(){
+    const dpr = Math.min(devicePixelRatio||1, 2);
+    canvas.width = innerWidth*dpr; canvas.height = innerHeight*dpr;
+    canvas.style.width = innerWidth+'px'; canvas.style.height = innerHeight+'px';
+  }
+  function seedDust(){
+    const count = window.innerWidth < 700 ? 40 : 70;
+    dust = [];
+    for(let i=0;i<count;i++){
+      dust.push({
+        x: Math.random(), y: Math.random(),
+        vx: (Math.random()-0.5)*0.02, vy: (Math.random()-0.5)*0.02,
+        size: 0.8 + Math.random()*1.8,
+        hue: Math.random()<0.5 ? [0,240,255] : [150,90,240],
+        twinkle: Math.random()*Math.PI*2
+      });
+    }
+  }
+  resizeDust(); seedDust();
+  window.addEventListener('resize', ()=>{ resizeDust(); });
+
+  const pointer = {x:0.5, y:0.5, active:false};
+  window.addEventListener('mousemove', e=>{ pointer.x=e.clientX/innerWidth; pointer.y=e.clientY/innerHeight; pointer.active=true; });
+  window.addEventListener('touchmove', e=>{
+    if(e.touches[0]){ pointer.x=e.touches[0].clientX/innerWidth; pointer.y=e.touches[0].clientY/innerHeight; pointer.active=true; }
+  }, {passive:true});
+
+  let last = performance.now();
+  function loop(now){
+    requestAnimationFrame(loop);
+    if(document.getElementById('studio').classList.contains('active')){ last=now; return; }
+    const dt = Math.min((now-last)/1000, 0.05); last = now;
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0,0,w,h);
+    dust.forEach(p=>{
+      p.twinkle += dt*1.5;
+      p.x += p.vx*dt; p.y += p.vy*dt;
+      if(pointer.active){
+        const dx = p.x-pointer.x, dy = p.y-pointer.y;
+        const d = Math.hypot(dx,dy);
+        if(d < 0.09 && d>0.0001){
+          const f = (1-d/0.09)*0.4;
+          p.x += (dx/d)*f*dt; p.y += (dy/d)*f*dt;
+        }
+      }
+      if(p.x<0)p.x=1; if(p.x>1)p.x=0; if(p.y<0)p.y=1; if(p.y>1)p.y=0;
+      const [r,g,b] = p.hue;
+      const alpha = 0.35 + 0.35*Math.sin(p.twinkle);
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+      ctx.arc(p.x*w, p.y*h, p.size*(devicePixelRatio||1), 0, Math.PI*2);
+      ctx.fill();
+    });
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ============================================================
    LANDING NAVIGATION LOGIC
 ============================================================ */
 function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
-document.getElementById('heroHowBtn').onclick = ()=>scrollToSection('page-howto');
-document.getElementById('menuHowto').onclick = ()=>scrollToSection('page-howto');
-document.getElementById('backToMenu').onclick = ()=>scrollToSection('page-menu');
+/* The guide lives in a slide-up sheet rather than a scrolled page, so the
+   landing flow stays short and the reference is only shown on request. */
+const howtoSheet = document.getElementById('howtoSheet');
+function openHowto(){ howtoSheet.classList.add('open'); }
+function closeHowto(){ howtoSheet.classList.remove('open'); }
+document.getElementById('heroHowBtn').onclick = openHowto;
+howtoSheet.addEventListener('click', (e)=>{ if(e.target === howtoSheet) closeHowto(); });
+window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeHowto(); });
+document.getElementById('menuHowto').onclick = openHowto;
+document.getElementById('menuScrollCue').onclick = openHowto;
+document.getElementById('backToMenu').onclick = closeHowto;
+const navHowtoLink = document.getElementById('navHowtoLink');
+if(navHowtoLink) navHowtoLink.onclick = (e)=>{ e.preventDefault(); openHowto(); };
 document.querySelectorAll('.nav-links a').forEach(a=>{
+  if(a.id === 'navHowtoLink') return;
   a.addEventListener('click', e=>{ e.preventDefault(); scrollToSection(a.getAttribute('href').slice(1)); });
 });
 document.getElementById('heroStartBtn').onclick = enterStudio;
 document.getElementById('menuStart').onclick = enterStudio;
-document.getElementById('howtoStartBtn').onclick = enterStudio;
+document.getElementById('howtoStartBtn').onclick = ()=>{ closeHowto(); enterStudio(); };
 document.getElementById('exitStudio').onclick = exitStudio;
 
 function enterStudio(){
@@ -795,6 +1596,31 @@ function exitStudio(){
   document.getElementById('studio').classList.remove('active');
   document.getElementById('flow').classList.remove('locked');
 }
+
+/* Hide UI — collapses every panel/tool/dock down to just the essentials
+   (brand, exit, language, this toggle) so the canvas can be seen clean. */
+let uiHidden = false;
+document.getElementById('hideUiBtn').onclick = ()=>{
+  uiHidden = !uiHidden;
+  const studioEl = document.getElementById('studio');
+  studioEl.classList.toggle('ui-hidden', uiHidden);
+  if(uiHidden){ allDrawers.forEach(d=>d.classList.remove('open')); }
+};
+
+/* Freeze / Resume — always available regardless of Hide UI. Freezing stops
+   the simulation stepping and every animated overlay in place so the
+   current frame can be exported cleanly. */
+let isFrozen = false;
+document.getElementById('stopPlayBtn').onclick = ()=>{
+  isFrozen = !isFrozen;
+  const btn = document.getElementById('stopPlayBtn');
+  const icon = document.getElementById('stopPlayIcon');
+  btn.classList.toggle('frozen', isFrozen);
+  icon.innerHTML = isFrozen
+    ? '<path d="M8 5v14l11-7z"/>'
+    : '<rect x="7" y="7" width="10" height="10" rx="1.5"/>';
+  document.getElementById('stopPlayLabel').textContent = I18N[currentLang][isFrozen ? 'btnResume' : 'btnFreeze'];
+};
 
 /* ============================================================
    HERO MINI CANVAS (small ambient WebGL preview)
@@ -856,9 +1682,44 @@ const state = {
   brushColor:[0,240,255],
   brushSize:1.0,
   lineCount:6,
+  blackholeLevel:5,
+  blackholeSpeed:5,
+  wispiness:5,
+  clarity:3,
+  timeScale:1,
+  particleSize:2.4,
+  particleSpeed:5,
+  particleCount:380,
+  particleTrail:0,
+  particleAlpha:80,
+  particleInteract:'none',
+  particleInteractAmt:5,
+  particleColorCount:1,
+  particleColors:[[0,240,255],[255,0,200],[255,230,0],[120,60,255],[0,255,150]],
+  voroScale:9,
+  voroSpeed:4,
+  voroEdge:5,
+  flowEnabled:false,
+  audioReactivity:5,
+  flowSpeed:5,
+  flowDir:{x:0,y:0},
+  canvasFrame:false,
+  realWater:false,
+  canvasStyle:'plain',
+  textureBehind:false,
+  symmetry:1,
+  mirror:false,
+  gradientBrush:false,
+  gradientSpeed:5,
+  cohesion:5,
+  splash:5,
   bgColor:[11,11,11],
+  bgColor2:[42,15,69],
+  bgGradient:false,
+  bgAngle:90,
   viscosity:0.30,
   damping:0.92,
+  jellyStretch:3,
   dissipation:0.999,
   curl:18,
   glow:0.55,
@@ -870,6 +1731,7 @@ const state = {
   ],
   audioReactive:0,
 };
+const DEFAULT_STATE = JSON.parse(JSON.stringify(state));
 
 /* ---- UI wiring: chips, sliders, drawer ---- */
 document.querySelectorAll('#artModeChips .chip').forEach(chip=>{
@@ -877,6 +1739,23 @@ document.querySelectorAll('#artModeChips .chip').forEach(chip=>{
     document.querySelectorAll('#artModeChips .chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active'); state.artMode = chip.dataset.mode;
     document.getElementById('lineCountField').style.display = (state.artMode==='geo' || state.artMode==='lineart') ? 'block' : 'none';
+    document.getElementById('blackholeFields').style.display = state.artMode==='blackhole' ? 'block' : 'none';
+  document.getElementById('particleFields').style.display = state.artMode==='particle' ? 'block' : 'none';
+  document.getElementById('voronoiFields').style.display = state.artMode==='voronoi' ? 'block' : 'none';
+  document.getElementById('rPtSize').value = state.particleSize; document.getElementById('vPtSize').textContent = (state.particleSize||2.4).toFixed(1);
+  document.getElementById('rPtSpeed').value = state.particleSpeed; document.getElementById('vPtSpeed').textContent = Math.round(state.particleSpeed||5);
+  document.getElementById('rPtCount').value = state.particleCount; document.getElementById('vPtCount').textContent = state.particleCount||380;
+  document.getElementById('rPtTrail').value = state.particleTrail; document.getElementById('vPtTrail').textContent = Math.round(state.particleTrail||0);
+  document.getElementById('rPtAlpha').value = state.particleAlpha; document.getElementById('vPtAlpha').textContent = Math.round(state.particleAlpha||80)+'%';
+  document.getElementById('ptInteract').value = state.particleInteract || 'none';
+  document.getElementById('rPtInteractAmt').value = state.particleInteractAmt; document.getElementById('vPtInteractAmt').textContent = Math.round(state.particleInteractAmt||5);
+  document.getElementById('rPtColors').value = state.particleColorCount; document.getElementById('vPtColors').textContent = state.particleColorCount||1;
+  renderParticleColors();
+  document.getElementById('rVoroScale').value = state.voroScale; document.getElementById('vVoroScale').textContent = Math.round(state.voroScale||9);
+  document.getElementById('rVoroSpeed').value = state.voroSpeed; document.getElementById('vVoroSpeed').textContent = Math.round(state.voroSpeed||4);
+  document.getElementById('rVoroEdge').value = state.voroEdge; document.getElementById('vVoroEdge').textContent = Math.round(state.voroEdge||5);
+    document.getElementById('particleFields').style.display = state.artMode==='particle' ? 'block' : 'none';
+    document.getElementById('voronoiFields').style.display = state.artMode==='voronoi' ? 'block' : 'none';
   };
 });
 document.querySelectorAll('#motionChips .chip').forEach(chip=>{
@@ -895,15 +1774,185 @@ function bindSlider(id, valId, key, fmt){
   };
 }
 bindSlider('rViscosity','vViscosity','viscosity', v=>v.toFixed(2));
-bindSlider('rDamping','vDamping','damping', v=>v.toFixed(3));
 bindSlider('rDissipation','vDissipation','dissipation', v=>v.toFixed(3));
 bindSlider('rCurl','vCurl','curl', v=>Math.round(v));
 bindSlider('rGlow','vGlow','glow', v=>v.toFixed(2));
 bindSlider('rBrushSize','vBrushSize','brushSize', v=>v.toFixed(1)+'×');
 bindSlider('rLineCount','vLineCount','lineCount', v=>Math.round(v));
+bindSlider('rBhLevel','vBhLevel','blackholeLevel', v=>Math.round(v));
+bindSlider('rBhSpeed','vBhSpeed','blackholeSpeed', v=>Math.round(v));
+bindSlider('rWispiness','vWispiness','wispiness', v=>Math.round(v));
+bindSlider('rClarity','vClarity','clarity', v=>Math.round(v));
+bindSlider('rTimeScale','vTimeScale','timeScale', v=>v.toFixed(1)+'×');
+bindSlider('rPtSize','vPtSize','particleSize', v=>v.toFixed(1));
+bindSlider('rPtSpeed','vPtSpeed','particleSpeed', v=>Math.round(v));
+bindSlider('rPtTrail','vPtTrail','particleTrail', v=>Math.round(v));
+bindSlider('rPtAlpha','vPtAlpha','particleAlpha', v=>Math.round(v)+'%');
+bindSlider('rPtInteractAmt','vPtInteractAmt','particleInteractAmt', v=>Math.round(v));
+document.getElementById('ptInteract').onchange = (e)=>{ state.particleInteract = e.target.value; };
+document.getElementById('rPtColors').oninput = (e)=>{
+  state.particleColorCount = parseInt(e.target.value,10);
+  document.getElementById('vPtColors').textContent = state.particleColorCount;
+  renderParticleColors();
+  assignParticleColors();
+};
+/* Shows one colour picker per active particle colour, so each of the 1..5
+   colours in the mix can be chosen individually. */
+function renderParticleColors(){
+  const grid = document.getElementById('ptColorGrid');
+  grid.innerHTML = '';
+  const n = state.particleColorCount || 1;
+  for(let i=0;i<n;i++){
+    const wrap = document.createElement('div');
+    wrap.className = 'field';
+    const input = document.createElement('input');
+    input.type = 'color';
+    input.value = rgbToHex(state.particleColors[i] || [0,240,255]);
+    input.oninput = (ev)=>{
+      state.particleColors[i] = hexToRgb(ev.target.value);
+      assignParticleColors();
+    };
+    wrap.appendChild(input);
+    grid.appendChild(wrap);
+  }
+}
+/* Gives every particle one of the active colours, so the field shows a real
+   mix rather than all particles sharing the brush colour. */
+function assignParticleColors(){
+  const n = state.particleColorCount || 1;
+  particles.forEach((p,i)=>{
+    p.color = (state.particleColors[i % n] || state.brushColor).slice();
+  });
+}
+renderParticleColors();
+document.getElementById('ptRandomColorsBtn').onclick = ()=>{
+  const base = Math.random();
+  for(let i=0;i<5;i++){
+    state.particleColors[i] = hsvToRgb((base + i*(0.18 + Math.random()*0.12)) % 1, 0.55 + Math.random()*0.4, 1);
+  }
+  renderParticleColors();
+  assignParticleColors();
+};
+bindSlider('rVoroScale','vVoroScale','voroScale', v=>Math.round(v));
+bindSlider('rVoroSpeed','vVoroSpeed','voroSpeed', v=>Math.round(v));
+bindSlider('rVoroEdge','vVoroEdge','voroEdge', v=>Math.round(v));
+document.getElementById('rPtCount').oninput = (e)=>{
+  state.particleCount = parseInt(e.target.value,10);
+  document.getElementById('vPtCount').textContent = state.particleCount;
+  seedParticles();
+};
+bindSlider('rFlowSpeed','vFlowSpeed','flowSpeed', v=>Math.round(v));
+bindSlider('rReactivity','vReactivity','audioReactivity', v=>Math.round(v));
+
+const FLOW_DIR_MAP = {
+  n:[0,1], s:[0,-1], e:[1,0], w:[-1,0],
+  ne:[0.7,0.7], nw:[-0.7,0.7], se:[0.7,-0.7], sw:[-0.7,-0.7], c:[0,0]
+};
+document.querySelectorAll('.flow-dot').forEach(dot=>{
+  dot.onclick = ()=>{
+    document.querySelectorAll('.flow-dot').forEach(d=>d.classList.remove('active'));
+    dot.classList.add('active');
+    const [dx,dy] = FLOW_DIR_MAP[dot.dataset.dir];
+    state.flowDir = {x:dx, y:dy};
+  };
+});
+const flowEnableSwitch = document.getElementById('flowEnableSwitch');
+flowEnableSwitch.onclick = ()=>{
+  state.flowEnabled = !state.flowEnabled;
+  flowEnableSwitch.classList.toggle('on', state.flowEnabled);
+};
+document.querySelectorAll('#symmetryChips .chip').forEach(chip=>{
+  chip.onclick = ()=>{
+    document.querySelectorAll('#canvasStyleChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.cstyle===(state.canvasStyle||'plain')));
+  document.getElementById('textureBehindSwitch').classList.toggle('on', !!state.textureBehind);
+  applyCanvasStyle();
+  document.querySelectorAll('#symmetryChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    state.symmetry = parseInt(chip.dataset.sym, 10);
+    updateToolStatus();
+  };
+});
+const mirrorSwitch = document.getElementById('mirrorSwitch');
+mirrorSwitch.onclick = ()=>{
+  state.mirror = !state.mirror;
+  mirrorSwitch.classList.toggle('on', state.mirror);
+  updateToolStatus();
+};
+const gradientSwitch = document.getElementById('gradientSwitch');
+gradientSwitch.onclick = ()=>{
+  state.gradientBrush = !state.gradientBrush;
+  gradientSwitch.classList.toggle('on', state.gradientBrush);
+  document.getElementById('gradientSpeedField').style.display = state.gradientBrush ? 'block' : 'none';
+};
+bindSlider('rGradientSpeed','vGradientSpeed','gradientSpeed', v=>Math.round(v));
+
+/* Tool hint visibility + dock scroll arrows */
+const showHintSwitch = document.getElementById('showHintSwitch');
+showHintSwitch.onclick = ()=>{
+  const on = !showHintSwitch.classList.contains('on');
+  showHintSwitch.classList.toggle('on', on);
+  document.getElementById('toolStatus').classList.toggle('status-off', !on);
+};
+document.getElementById('dockLeft').onclick = ()=>{ document.getElementById('dock').scrollBy({left:-140, behavior:'smooth'}); };
+document.getElementById('dockRight').onclick = ()=>{ document.getElementById('dock').scrollBy({left:140, behavior:'smooth'}); };
+
+document.querySelectorAll('#canvasStyleChips .chip').forEach(chip=>{
+  chip.onclick = ()=>{
+    document.querySelectorAll('#canvasStyleChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    state.canvasStyle = chip.dataset.cstyle;
+    applyCanvasStyle();
+  };
+});
+/* When "Texture Behind Water" is on, the pattern is rendered inside the
+   WebGL background instead of as an overlay, so paint covers it properly.
+   The DOM overlay is then switched off to avoid drawing it twice. */
+function applyCanvasStyle(){
+  const tex = document.getElementById('canvasTexture');
+  const style = state.canvasStyle || 'plain';
+  tex.className = (style === 'plain' || state.textureBehind) ? '' : style;
+}
+const textureBehindSwitch = document.getElementById('textureBehindSwitch');
+textureBehindSwitch.onclick = ()=>{
+  state.textureBehind = !state.textureBehind;
+  textureBehindSwitch.classList.toggle('on', state.textureBehind);
+  applyCanvasStyle();
+};
+
+document.querySelectorAll('#physicsTabs .tab').forEach(tab=>{
+  tab.onclick = ()=>{
+    document.querySelectorAll('#physicsTabs .tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('#physicsDrawer .tab-page').forEach(pg=>{
+      pg.style.display = pg.dataset.page === tab.dataset.tab ? 'block' : 'none';
+    });
+  };
+});
+
+const canvasFrameSwitch = document.getElementById('canvasFrameSwitch');
+canvasFrameSwitch.onclick = ()=>{
+  state.canvasFrame = !state.canvasFrame;
+  canvasFrameSwitch.classList.toggle('on', state.canvasFrame);
+};
+const realWaterSwitch = document.getElementById('realWaterSwitch');
+realWaterSwitch.onclick = ()=>{
+  state.realWater = !state.realWater;
+  realWaterSwitch.classList.toggle('on', state.realWater);
+  document.getElementById('realWaterFields').style.display = state.realWater ? 'block' : 'none';
+};
+bindSlider('rCohesion','vCohesion','cohesion', v=>Math.round(v));
+bindSlider('rSplash','vSplash','splash', v=>Math.round(v));
 
 document.getElementById('brushColor').oninput = e=>{ state.brushColor = hexToRgb(e.target.value); pushRecentColor(state.brushColor); };
 document.getElementById('bgColor').oninput = e=>{ state.bgColor = hexToRgb(e.target.value); };
+document.getElementById('bgColor2').oninput = e=>{ state.bgColor2 = hexToRgb(e.target.value); };
+bindSlider('rBgAngle','vBgAngle','bgAngle', v=>Math.round(v)+'°');
+const bgGradientSwitch = document.getElementById('bgGradientSwitch');
+bgGradientSwitch.onclick = ()=>{
+  state.bgGradient = !state.bgGradient;
+  bgGradientSwitch.classList.toggle('on', state.bgGradient);
+  document.getElementById('bgGradientFields').style.display = state.bgGradient ? 'block' : 'none';
+};
 
 document.getElementById('rOpacity').oninput = e=>{
   const v = e.target.value;
@@ -993,17 +2042,341 @@ function pushRecentColor(c){
 }
 renderQuickColors();
 
+/* Reset to Default — undoes every slider/chip/color tweak in one tap,
+   for when things have been fiddled with into a mess. */
+/* Pushes every value in `state` back out to the controls. Shared by Reset
+   and by Open Project, so the panels always match the actual settings. */
+function syncControlsFromState(){
+  document.getElementById('rViscosity').value = state.viscosity; document.getElementById('vViscosity').textContent = state.viscosity.toFixed(2);
+  document.getElementById('rDissipation').value = state.dissipation; document.getElementById('vDissipation').textContent = state.dissipation.toFixed(3);
+  document.getElementById('rCurl').value = state.curl; document.getElementById('vCurl').textContent = Math.round(state.curl);
+  document.getElementById('rGlow').value = state.glow; document.getElementById('vGlow').textContent = state.glow.toFixed(2);
+  document.getElementById('rBrushSize').value = state.brushSize; document.getElementById('vBrushSize').textContent = state.brushSize.toFixed(1)+'×';
+  document.getElementById('rLineCount').value = state.lineCount; document.getElementById('vLineCount').textContent = Math.round(state.lineCount);
+  document.getElementById('rBhLevel').value = state.blackholeLevel; document.getElementById('vBhLevel').textContent = Math.round(state.blackholeLevel);
+  document.getElementById('rBhSpeed').value = state.blackholeSpeed; document.getElementById('vBhSpeed').textContent = Math.round(state.blackholeSpeed);
+  document.getElementById('rWispiness').value = state.wispiness; document.getElementById('vWispiness').textContent = Math.round(state.wispiness);
+  document.getElementById('rClarity').value = state.clarity; document.getElementById('vClarity').textContent = Math.round(state.clarity);
+  document.getElementById('rTimeScale').value = state.timeScale; document.getElementById('vTimeScale').textContent = (state.timeScale||1).toFixed(1)+'×';
+  document.getElementById('rFlowSpeed').value = state.flowSpeed; document.getElementById('vFlowSpeed').textContent = Math.round(state.flowSpeed);
+  document.getElementById('rReactivity').value = state.audioReactivity; document.getElementById('vReactivity').textContent = Math.round(state.audioReactivity);
+  document.getElementById('rCohesion').value = state.cohesion; document.getElementById('vCohesion').textContent = Math.round(state.cohesion);
+  document.getElementById('rSplash').value = state.splash; document.getElementById('vSplash').textContent = Math.round(state.splash);
+  document.getElementById('rGradientSpeed').value = state.gradientSpeed; document.getElementById('vGradientSpeed').textContent = Math.round(state.gradientSpeed);
+
+  document.getElementById('flowEnableSwitch').classList.toggle('on', !!state.flowEnabled);
+  document.getElementById('canvasFrameSwitch').classList.toggle('on', !!state.canvasFrame);
+  document.getElementById('realWaterSwitch').classList.toggle('on', !!state.realWater);
+  document.getElementById('realWaterFields').style.display = state.realWater ? 'block' : 'none';
+  document.getElementById('mirrorSwitch').classList.toggle('on', !!state.mirror);
+  document.getElementById('gradientSwitch').classList.toggle('on', !!state.gradientBrush);
+  document.getElementById('gradientSpeedField').style.display = state.gradientBrush ? 'block' : 'none';
+
+  document.getElementById('brushColor').value = rgbToHex(state.brushColor);
+  document.getElementById('bgColor').value = rgbToHex(state.bgColor);
+  document.getElementById('bgColor2').value = rgbToHex(state.bgColor2 || [42,15,69]);
+  document.getElementById('bgGradientSwitch').classList.toggle('on', !!state.bgGradient);
+  document.getElementById('bgGradientFields').style.display = state.bgGradient ? 'block' : 'none';
+  document.getElementById('rBgAngle').value = state.bgAngle || 90;
+  document.getElementById('vBgAngle').textContent = Math.round(state.bgAngle||90)+'°';
+  state.lights.forEach((l,i)=>{ lightGrid.children[i].querySelector('input').value = rgbToHex(l.color); });
+
+  document.querySelectorAll('#artModeChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.mode===state.artMode));
+  document.querySelectorAll('#motionChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.motion===state.motion));
+  document.querySelectorAll('#symmetryChips .chip').forEach(c=>c.classList.toggle('active', parseInt(c.dataset.sym,10)===(state.symmetry||1)));
+  document.querySelectorAll('.flow-dot').forEach(d=>{
+    const dir = FLOW_DIR_MAP[d.dataset.dir];
+    d.classList.toggle('active', Math.abs(dir[0]-state.flowDir.x) < 0.01 && Math.abs(dir[1]-state.flowDir.y) < 0.01);
+  });
+  document.getElementById('lineCountField').style.display = (state.artMode==='geo'||state.artMode==='lineart') ? 'block' : 'none';
+  document.getElementById('blackholeFields').style.display = state.artMode==='blackhole' ? 'block' : 'none';
+  document.querySelectorAll('.dock-icon[data-tool]').forEach(i=>i.classList.toggle('active', i.dataset.tool===state.tool));
+
+  renderQuickColors();
+  updateToolStatus();
+}
+
+function resetToDefaults(){
+  Object.assign(state, JSON.parse(JSON.stringify(DEFAULT_STATE)));
+  recentColors = [[0,240,255],[255,0,200],[255,230,0]];
+  document.getElementById('rOpacity').value = 62;
+  document.documentElement.style.setProperty('--panel-alpha', '0.62');
+  document.getElementById('vOpacity').textContent = '62%';
+  syncControlsFromState();
+
+  if(fluidSim) fluidSim.clearDye();
+  jellyBodies.length=0; particles.length=0; geoLineShapes.length=0; blackHoles.length=0; sparkParticles.length=0;
+}
+document.getElementById('resetDefaultsBtn').onclick = ()=> resetToDefaults();
+
+/* ============================================================
+   MY PRESETS
+   Saves every look-related setting (but not the artwork) so a tuned setup
+   can be recalled instantly. Stored alongside the Library in this browser.
+============================================================ */
+const PRESET_KEY = 'nova_presets_v1';
+const PRESET_MAX = 12;
+// Only the settings that define the "look" — deliberately excludes tool
+// choice and transient audio values so recalling a preset never disrupts
+// what you're currently doing.
+const PRESET_FIELDS = ['artMode','motion','symmetry','mirror','brushColor','brushSize','bgColor','bgColor2','bgGradient','bgAngle',
+  'canvasStyle','textureBehind','viscosity','dissipation','curl','glow','lights','wispiness','clarity',
+  'timeScale','gradientBrush','gradientSpeed','realWater','cohesion','splash','lineCount',
+  'blackholeLevel','blackholeSpeed','particleSize','particleSpeed','particleCount','particleTrail',
+  'particleAlpha','particleColorCount','particleColors','particleInteract','particleInteractAmt',
+  'voroScale','voroSpeed','voroEdge','flowEnabled','flowSpeed','flowDir','canvasFrame'];
+function presetsRead(){
+  try{ return JSON.parse(localStorage.getItem(PRESET_KEY) || '[]'); }catch(e){ return []; }
+}
+function presetsWrite(items){
+  try{ localStorage.setItem(PRESET_KEY, JSON.stringify(items)); return true; }
+  catch(e){ window.__novaShowError('Could not save the preset — storage is full or blocked.'); return false; }
+}
+function renderPresets(){
+  const list = document.getElementById('myPresetList');
+  if(!list) return;
+  const items = presetsRead();
+  list.innerHTML = '';
+  if(!items.length){
+    const empty = document.createElement('div');
+    empty.className = 'lib-empty';
+    empty.textContent = I18N[currentLang].presetEmpty;
+    list.appendChild(empty);
+    return;
+  }
+  items.forEach(item=>{
+    const row = document.createElement('div');
+    row.className = 'mood-swatch';
+    const sw = document.createElement('div');
+    sw.className = 'sw';
+    const c = item.data.brushColor || [0,240,255];
+    const bg = item.data.bgColor || [11,11,11];
+    sw.style.background = 'linear-gradient(135deg, rgb('+c+'), rgb('+bg+'))';
+    const lbl = document.createElement('div');
+    lbl.className = 'lbl';
+    lbl.innerHTML = '<span></span><small></small>';
+    lbl.querySelector('span').textContent = item.name;
+    lbl.querySelector('small').textContent = (item.data.artMode||'') + ' · ' + (item.data.motion||'');
+    const del = document.createElement('div');
+    del.className = 'lib-del';
+    del.textContent = '×';
+    del.onclick = (ev)=>{ ev.stopPropagation(); presetsWrite(presetsRead().filter(x=>x.id!==item.id)); renderPresets(); };
+    row.onclick = ()=>{
+      Object.assign(state, JSON.parse(JSON.stringify(item.data)));
+      syncControlsFromState();
+      seedParticles();
+    };
+    row.appendChild(sw); row.appendChild(lbl); row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+document.getElementById('savePresetBtn').onclick = ()=>{
+  const data = {};
+  PRESET_FIELDS.forEach(k=>{ if(state[k] !== undefined) data[k] = JSON.parse(JSON.stringify(state[k])); });
+  const items = presetsRead();
+  items.unshift({ id:'p'+Date.now(), name:'Look '+(items.length+1), data });
+  while(items.length > PRESET_MAX) items.pop();
+  if(presetsWrite(items)) renderPresets();
+};
+renderPresets();
+
+/* ============================================================
+   KEYBOARD SHORTCUTS  (desktop)
+============================================================ */
+function selectToolByKey(toolName){
+  const icon = document.querySelector('.dock-icon[data-tool="'+toolName+'"]');
+  if(icon) icon.click();
+}
+window.addEventListener('keydown', (e)=>{
+  // ignore while typing in a field
+  const tag = (e.target.tagName || '').toLowerCase();
+  if(tag === 'input' || tag === 'select' || tag === 'textarea') return;
+  if(!document.getElementById('studio').classList.contains('active')) return;
+
+  const k = e.key.toLowerCase();
+  if((e.metaKey || e.ctrlKey) && k === 'z'){
+    e.preventDefault();
+    if(e.shiftKey) performRedo(); else performUndo();
+    return;
+  }
+  if(e.metaKey || e.ctrlKey) return;
+
+  switch(k){
+    case 'b': selectToolByKey('paint'); break;
+    case 'e': selectToolByKey('eraser'); break;
+    case 'r': selectToolByKey('ripple'); break;
+    case 's': selectToolByKey('stretch'); break;
+    case 'i': selectToolByKey('picker'); break;
+    case 'h': document.getElementById('hideUiBtn').click(); break;
+    case 'g': document.getElementById('randomizeBtn').click(); break;
+    case ' ':
+      e.preventDefault();
+      document.getElementById('stopPlayBtn').click();
+      break;
+  }
+});
+
+/* ============================================================
+   RANDOMIZE
+   Rolls a fresh look — colours, art mode, motion, symmetry and the physics
+   feel — in one tap. Deliberately leaves the existing artwork alone so it
+   can be used mid-piece to shift direction rather than starting over.
+============================================================ */
+function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function randomizeSettings(){
+  const artModes = ['fluid','voronoi','particle','geo','lineart','pool','blackhole','sparks','fishtank'];
+  const motions  = ['normal','spin','zigzag','wave','radial'];
+
+  state.artMode = pickRandom(artModes);
+  state.motion  = pickRandom(motions);
+  state.symmetry = pickRandom([1,1,2,4,6,8]);   // weighted toward "off"
+  state.mirror   = Math.random() < 0.35;
+
+  // a harmonious palette: pick a base hue, then take spaced hues from it
+  const baseHue = Math.random();
+  const hueAt = o => hsvToRgb((baseHue + o) % 1, 0.55 + Math.random()*0.4, 1.0);
+  state.brushColor = hueAt(0);
+  recentColors = [hueAt(0), hueAt(0.33), hueAt(0.66)];
+
+  // keep backgrounds dark so the neon palette still reads
+  const bgV = 0.04 + Math.random()*0.09;
+  state.bgColor = hsvToRgb((baseHue + 0.5) % 1, 0.5, bgV);
+  state.bgGradient = Math.random() < 0.5;
+  state.bgColor2 = hsvToRgb((baseHue + 0.72) % 1, 0.6, bgV + 0.06);
+  state.bgAngle = Math.round(Math.random()*24)*15;
+  state.lights = state.lights.map((l,i)=>({ color: hueAt(i*0.25), intensity: 0.25 + Math.random()*0.45 }));
+
+  state.curl        = Math.round(4 + Math.random()*40);
+  state.viscosity   = +(0.05 + Math.random()*0.8).toFixed(2);
+  state.wispiness   = Math.round(1 + Math.random()*9);
+  state.clarity     = Math.round(1 + Math.random()*4);
+  state.brushSize   = +(0.5 + Math.random()*1.8).toFixed(1);
+  state.lineCount   = Math.round(3 + Math.random()*7);
+  state.glow        = +(0.3 + Math.random()*0.9).toFixed(2);
+  state.gradientBrush = Math.random() < 0.4;
+  state.canvasStyle = pickRandom(['plain','plain','paper','grid','iso']);
+  state.textureBehind = true;
+
+  syncControlsFromState();
+}
+document.getElementById('randomizeBtn').onclick = ()=> randomizeSettings();
+
+/* ============================================================
+   LIBRARY — saved works stored in this browser
+   Keeps a small thumbnail plus the full painted state, so a piece can be
+   reopened and carried on with. Capped so browser storage can't fill up.
+============================================================ */
+const LIB_KEY = 'nova_library_v1';
+const LIB_MAX = 8;
+function libRead(){
+  try{ return JSON.parse(localStorage.getItem(LIB_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function libWrite(items){
+  try{ localStorage.setItem(LIB_KEY, JSON.stringify(items)); return true; }
+  catch(e){
+    window.__novaShowError('Library is full or storage is blocked.\nTry deleting an older work first.');
+    return false;
+  }
+}
+function downscaleDataUrl(sourceCanvas, maxW){
+  const scale = Math.min(1, maxW / sourceCanvas.width);
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(sourceCanvas.width*scale));
+  c.height = Math.max(1, Math.round(sourceCanvas.height*scale));
+  c.getContext('2d').drawImage(sourceCanvas, 0, 0, c.width, c.height);
+  return c.toDataURL('image/png');
+}
+function renderLibrary(){
+  const list = document.getElementById('libraryList');
+  const items = libRead();
+  list.innerHTML = '';
+  if(!items.length){
+    const empty = document.createElement('div');
+    empty.className = 'lib-empty';
+    empty.textContent = I18N[currentLang].libEmpty;
+    list.appendChild(empty);
+    return;
+  }
+  items.forEach(item=>{
+    const row = document.createElement('div');
+    row.className = 'lib-item';
+    const thumb = document.createElement('div');
+    thumb.className = 'lib-thumb';
+    if(item.thumb) thumb.style.backgroundImage = 'url('+item.thumb+')';
+    const meta = document.createElement('div');
+    meta.className = 'lib-meta';
+    const when = new Date(item.savedAt);
+    meta.innerHTML = '<b></b><small></small>';
+    meta.querySelector('b').textContent = item.name || 'Untitled';
+    meta.querySelector('small').textContent = when.toLocaleDateString() + ' ' + when.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    const del = document.createElement('div');
+    del.className = 'lib-del';
+    del.textContent = '×';
+    del.onclick = (ev)=>{
+      ev.stopPropagation();
+      libWrite(libRead().filter(x=>x.id !== item.id));
+      renderLibrary();
+    };
+    row.onclick = ()=> loadLibraryItem(item.id);
+    row.appendChild(thumb); row.appendChild(meta); row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+function loadLibraryItem(id){
+  const item = libRead().find(x=>x.id===id);
+  if(!item) return;
+  try{
+    Object.assign(state, item.state);
+    if(Array.isArray(item.recentColors) && item.recentColors.length) recentColors = item.recentColors;
+    syncControlsFromState();
+    if(item.dye){
+      const img = new Image();
+      img.onload = ()=> restoreDyeFromImage(img);
+      img.src = item.dye;
+    }
+  }catch(err){
+    window.__novaShowError('Could not open that work: '+err.message);
+  }
+}
+document.getElementById('saveToLibraryBtn').onclick = ()=>{
+  try{
+    const dyeCanvas = buildTransparentWaterCanvas();
+    const entry = {
+      id: 'w'+Date.now(),
+      name: 'Work '+(libRead().length+1),
+      savedAt: new Date().toISOString(),
+      thumb: downscaleDataUrl(fluidCanvas, 120),
+      dye: downscaleDataUrl(dyeCanvas, 512),
+      state: JSON.parse(JSON.stringify(state)),
+      recentColors: recentColors
+    };
+    const items = libRead();
+    items.unshift(entry);
+    while(items.length > LIB_MAX) items.pop();
+    if(libWrite(items)) renderLibrary();
+  }catch(err){
+    window.__novaShowError('Save to library failed: '+err.message);
+  }
+};
+// Mirror the top-bar actions inside the Export panel so the settings and the
+// actions that use them live together.
+document.getElementById('doExportBtn').onclick = ()=> document.getElementById('exportBtn').click();
+document.getElementById('doSaveBtn').onclick = ()=> document.getElementById('saveProjectBtn').click();
+document.getElementById('doLoadBtn').onclick = ()=> document.getElementById('loadProjectBtn').click();
+
 /* drawer + dock — palette, physics, audio and settings are four independent
    panels so they never fight over the same space; opening one closes the others */
 const paletteDrawer = document.getElementById('paletteDrawer');
 const physicsDrawer = document.getElementById('physicsDrawer');
 const settingsDrawer = document.getElementById('settingsDrawer');
 const audioDrawer = document.getElementById('audioDrawer');
-const allDrawers = [paletteDrawer, physicsDrawer, settingsDrawer, audioDrawer];
+const libraryDrawer = document.getElementById('libraryDrawer');
+const allDrawers = [paletteDrawer, physicsDrawer, settingsDrawer, audioDrawer, libraryDrawer];
 function setToolStatusHidden(hidden){
-  const el = document.getElementById('toolStatus');
-  el.style.opacity = hidden ? '0' : '1';
-  el.style.pointerEvents = hidden ? 'none' : 'auto';
+  // Uses a class rather than inline styles — inline opacity would win over
+  // the .ui-hidden rule and leave this card stuck visible when the UI is hidden.
+  document.getElementById('toolStatus').classList.toggle('drawer-open', hidden);
 }
 function toggleDrawer(target, force){
   const open = force!==undefined ? force : !target.classList.contains('open');
@@ -1016,6 +2389,8 @@ document.getElementById('dockSettings').onclick = ()=>toggleDrawer(settingsDrawe
 document.getElementById('dockPalette').onclick = ()=>toggleDrawer(paletteDrawer);
 document.getElementById('dockPhysics').onclick = ()=>toggleDrawer(physicsDrawer);
 document.getElementById('dockAudio').onclick = ()=>toggleDrawer(audioDrawer);
+document.getElementById('libraryBtn').onclick = ()=>{ renderLibrary(); toggleDrawer(libraryDrawer); };
+
 
 /* dock tool selection + macOS-style hover scaling
    clicking the already-active tool turns it off (state.tool='none') so a
@@ -1067,11 +2442,12 @@ function updateToolStatus(){
     descEl.textContent = dict.statusHintNone;
     return;
   }
-  const map = {paint:['statusPaint','statusHintPaint'], jelly:['statusJelly','statusHintJelly'], ripple:['statusRipple','statusHintRipple'], stretch:['statusStretch','statusHintStretch']};
+  const map = {paint:['statusPaint','statusHintPaint'], jelly:['statusJelly','statusHintJelly'], ripple:['statusRipple','statusHintRipple'], stretch:['statusStretch','statusHintStretch'], eraser:['statusEraser','statusHintEraser'], picker:['statusPicker','statusHintPicker']};
   const keys = map[state.tool] || map.paint;
   titleEl.textContent = dict[keys[0]];
   const motionLbl = document.querySelector(`#motionChips .chip[data-motion="${state.motion}"]`);
-  descEl.textContent = (state.tool==='paint' ? (motionLbl?motionLbl.textContent:'') + ' · ' : '') + dict[keys[1]];
+  const symNote = (state.symmetry||1) > 1 ? ' · Sym ' + state.symmetry + '×' + (state.mirror ? ' mirror' : '') : '';
+  descEl.textContent = (state.tool==='paint' ? (motionLbl?motionLbl.textContent:'') + ' · ' : '') + dict[keys[1]] + symNote;
 }
 
 /* mood presets */
@@ -1090,17 +2466,18 @@ MOODS.forEach(m=>{
   moodList.appendChild(row);
 });
 function applyMood(m){
-  state.bgColor = m.bg;
+  state.bgColor = m.bg.slice();
   document.getElementById('bgColor').value = rgbToHex(m.bg);
-  state.brushColor = m.colors[0];
+  state.brushColor = m.colors[0].slice();
   document.getElementById('brushColor').value = rgbToHex(m.colors[0]);
+  pushRecentColor(state.brushColor);
   state.artMode = m.artMode;
   document.querySelectorAll('#artModeChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.mode===m.artMode));
   state.curl = m.curl;
   document.getElementById('rCurl').value = m.curl;
   document.getElementById('vCurl').textContent = m.curl;
   m.lights.forEach((c,i)=>{
-    state.lights[i].color = c;
+    state.lights[i].color = c.slice();
     lightGrid.children[i].querySelector('input').value = rgbToHex(c);
   });
 }
@@ -1110,21 +2487,263 @@ document.getElementById('clearCanvasBtn').onclick = (e)=>{
   e.currentTarget.classList.remove('pulse'); void e.currentTarget.offsetWidth; e.currentTarget.classList.add('pulse');
   fluidSim.clearDye(); jellyBodies.length=0; particles.length=0; geoLineShapes.length=0; blackHoles.length=0; sparkParticles.length=0;
 };
-document.getElementById('exportBtn').onclick = (e)=>{
-  const btn = e.currentTarget;
-  btn.classList.remove('pulse'); void btn.offsetWidth; btn.classList.add('pulse');
-  const dataUrl = fluidCanvas.toDataURL('image/png');
+/* Reads the dye framebuffer directly (no background/lighting baked in)
+   and builds a 2D canvas with alpha derived from paint intensity — a
+   genuinely transparent "water only" export, not just a visual trick. */
+function buildTransparentWaterCanvas(){
+  const gl = fluidSim.gl;
+  const dye = fluidSim.dye.a;
+  const w = dye.w, h = dye.h;
+  const pixels = new Uint8Array(w*h*4);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, dye.fbo);
+  gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+  const out = document.createElement('canvas');
+  out.width = w; out.height = h;
+  const octx = out.getContext('2d');
+  const img = octx.createImageData(w,h);
+  for(let y=0;y<h;y++){
+    for(let x=0;x<w;x++){
+      const srcIdx = ((h-1-y)*w+x)*4; // WebGL reads bottom-up; flip to canvas top-down
+      const dstIdx = (y*w+x)*4;
+      const r=pixels[srcIdx], g=pixels[srcIdx+1], b=pixels[srcIdx+2];
+      img.data[dstIdx]=r; img.data[dstIdx+1]=g; img.data[dstIdx+2]=b;
+      img.data[dstIdx+3]=Math.max(r,g,b);
+    }
+  }
+  octx.putImageData(img,0,0);
+  return out;
+}
+function performExport(){
+  const format = document.getElementById('exportFormat').value;
+  const resSel = document.getElementById('exportResolution').value;
+  const transparent = format==='png' && document.getElementById('transparentSwitch').classList.contains('on');
+
+  const sourceCanvas = transparent ? buildTransparentWaterCanvas() : fluidCanvas;
+  let targetW = sourceCanvas.width, targetH = sourceCanvas.height;
+  if(resSel !== '1'){
+    const targetLong = parseInt(resSel,10);
+    const aspect = sourceCanvas.width / sourceCanvas.height;
+    if(sourceCanvas.width >= sourceCanvas.height){ targetW = targetLong; targetH = Math.round(targetLong/aspect); }
+    else { targetH = targetLong; targetW = Math.round(targetLong*aspect); }
+  }
+
+  let finalCanvas = sourceCanvas;
+  if(targetW !== sourceCanvas.width || targetH !== sourceCanvas.height){
+    const out = document.createElement('canvas');
+    out.width = targetW; out.height = targetH;
+    const octx = out.getContext('2d');
+    octx.imageSmoothingEnabled = true;
+    if('imageSmoothingQuality' in octx) octx.imageSmoothingQuality = 'high';
+    octx.drawImage(sourceCanvas, 0, 0, targetW, targetH);
+    finalCanvas = out;
+  }
+
+  const mime = format==='jpg' ? 'image/jpeg' : 'image/png';
+  const dataUrl = format==='jpg' ? finalCanvas.toDataURL(mime, 0.92) : finalCanvas.toDataURL(mime);
+  if(browserBlocksDownloads()){
+    // In-app browsers turn a download into a navigation. Showing the image
+    // in an overlay lets it be long-pressed and saved without leaving the app.
+    showImagePreview(dataUrl);
+    return;
+  }
   const link = document.createElement('a');
-  link.download = 'nova-artwork-'+Date.now()+'.png';
+  link.download = 'nova-artwork-'+Date.now()+'.'+(format==='jpg'?'jpg':'png');
   link.href = dataUrl;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  // Some in-app browsers (e.g. embedded webviews) silently ignore the
-  // download attribute — also open the PNG in a new tab, in the same
-  // user gesture, so it can always be long-pressed and saved manually.
-  window.open(dataUrl, '_blank');
+}
+
+/* Full-screen preview used when the browser can't download files: the image
+   can be long-pressed and saved to the photo library from here. */
+function showImagePreview(dataUrl){
+  const old = document.getElementById('imgPreview');
+  if(old) old.remove();
+  const wrap = document.createElement('div');
+  wrap.id = 'imgPreview';
+  wrap.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(6,4,12,.94);'+
+    'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px;';
+  const img = document.createElement('img');
+  img.src = dataUrl;
+  img.style.cssText = 'max-width:100%;max-height:76vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.6);';
+  const note = document.createElement('div');
+  note.style.cssText = 'color:#dfe8ea;font:13px/1.5 -apple-system,sans-serif;text-align:center;max-width:420px;';
+  note.textContent = I18N[currentLang].previewHint;
+  const close = document.createElement('div');
+  close.textContent = '✕';
+  close.style.cssText = 'position:absolute;top:16px;right:18px;color:#fff;font-size:26px;cursor:pointer;';
+  close.onclick = ()=> wrap.remove();
+  wrap.appendChild(close); wrap.appendChild(img); wrap.appendChild(note);
+  document.body.appendChild(wrap);
+}
+/* ============================================================
+   VIDEO RECORDING
+   Captures the live canvas to a video file — the motion of the fluid is
+   the whole point of this studio, and a still image can't show it.
+============================================================ */
+let mediaRecorder = null, recordedChunks = [], recordTimer = null;
+function pickRecordMime(){
+  const options = ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'];
+  for(const o of options){
+    if(window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(o)) return o;
+  }
+  return '';
+}
+function startRecording(){
+  if(!window.MediaRecorder || !fluidCanvas.captureStream){
+    window.__novaShowError('Video recording is not supported in this browser.');
+    return false;
+  }
+  try{
+    const stream = fluidCanvas.captureStream(30);
+    const mime = pickRecordMime();
+    mediaRecorder = mime ? new MediaRecorder(stream, {mimeType:mime}) : new MediaRecorder(stream);
+    recordedChunks = [];
+    mediaRecorder.ondataavailable = e=>{ if(e.data && e.data.size) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = ()=>{
+      const type = mediaRecorder.mimeType || 'video/webm';
+      const blob = new Blob(recordedChunks, {type});
+      const url = URL.createObjectURL(blob);
+      const ext = type.includes('mp4') ? 'mp4' : 'webm';
+      const link = document.createElement('a');
+      link.download = 'nova-artwork-'+Date.now()+'.'+ext;
+      link.href = url;
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      setTimeout(()=>URL.revokeObjectURL(url), 10000);
+    };
+    mediaRecorder.start();
+    return true;
+  }catch(err){
+    window.__novaShowError('Could not start recording: '+err.message);
+    return false;
+  }
+}
+function stopRecording(){
+  if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+  mediaRecorder = null;
+  if(recordTimer){ clearTimeout(recordTimer); recordTimer = null; }
+}
+const recordBtn = document.getElementById('recordBtn');
+let isRecording = false;
+recordBtn.onclick = ()=>{
+  try{
+    if(isRecording){
+      stopRecording();
+      isRecording = false;
+      recordBtn.classList.remove('recording');
+    } else {
+      if(!window.MediaRecorder){
+        window.__novaShowError('MediaRecorder is not available in this browser/webview.\nTry opening the file in Safari or Chrome directly rather than an in-app browser.');
+        return;
+      }
+      if(!fluidCanvas.captureStream){
+        window.__novaShowError('canvas.captureStream() is not supported here, so video recording cannot work in this browser.');
+        return;
+      }
+      if(startRecording()){
+        isRecording = true;
+        recordBtn.classList.add('recording');
+        // hard cap so a forgotten recording can't grow without limit
+        recordTimer = setTimeout(()=>{
+          if(isRecording){ stopRecording(); isRecording = false; recordBtn.classList.remove('recording'); }
+        }, 60000);
+      }
+    }
+  }catch(err){
+    window.__novaShowError('Record failed: ' + err.message + (err.stack ? '\n'+err.stack.split('\n')[0] : ''));
+  }
 };
+
+/* ============================================================
+   SAVE / OPEN PROJECT
+   Stores the settings plus a snapshot of the painted dye, so a piece can
+   be reopened later and kept working on — not just exported as an image.
+============================================================ */
+/* Saving a project always writes to the in-browser Library first, because
+   that works everywhere. Downloading a .novart file is offered as an extra,
+   and only attempted where downloads actually work — in in-app browsers a
+   download navigates away and dumps raw JSON on screen instead. */
+function browserBlocksDownloads(){
+  const a = document.createElement('a');
+  if(typeof a.download === 'undefined') return true;
+  const ua = navigator.userAgent || '';
+  // Known in-app webviews that hijack downloads into a navigation
+  if(/FBAN|FBAV|Instagram|Line\/|Twitter|MicroMessenger|KAKAOTALK|; wv\)/i.test(ua)) return true;
+  // Generic iOS in-app webview: iOS device, but not real Safari and not a
+  // home-screen app. These reliably turn downloads into a page navigation.
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if(isIOS){
+    const isRealSafari = /Safari/.test(ua) && /Version\//.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
+    const isStandalone = window.navigator.standalone === true;
+    if(!isRealSafari && !isStandalone) return true;
+  }
+  return false;
+}
+document.getElementById('saveProjectBtn').onclick = ()=>{
+  try{
+    // 1. Always store it in the Library — reliable in every browser
+    document.getElementById('saveToLibraryBtn').click();
+
+    // 2. Then try a real file download where that's actually supported
+    if(browserBlocksDownloads()){
+      window.__novaShowError('Saved to your Library (tap the grid icon to reopen it).\n\nDownloading a .novart file is blocked by this in-app browser — open the page in Safari or Chrome if you want a file copy.');
+      return;
+    }
+    const snapshot = buildTransparentWaterCanvas().toDataURL('image/png');
+    const project = {
+      version: 1,
+      savedAt: new Date().toISOString(),
+      state: JSON.parse(JSON.stringify(state)),
+      recentColors: recentColors,
+      dye: snapshot
+    };
+    const blob = new Blob([JSON.stringify(project)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'nova-project-'+Date.now()+'.novart';
+    link.href = url;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    setTimeout(()=>URL.revokeObjectURL(url), 10000);
+  }catch(err){
+    window.__novaShowError('Save failed: ' + err.message + (err.stack ? '\n'+err.stack.split('\n')[0] : ''));
+  }
+};
+document.getElementById('loadProjectBtn').onclick = ()=> document.getElementById('loadProjectInput').click();
+document.getElementById('loadProjectInput').onchange = (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const project = JSON.parse(reader.result);
+      if(!project || !project.state) throw new Error('Not a Nova project file');
+      Object.assign(state, project.state);
+      if(Array.isArray(project.recentColors) && project.recentColors.length){
+        recentColors = project.recentColors;
+      }
+      syncControlsFromState();
+      if(project.dye){
+        const img = new Image();
+        img.onload = ()=> restoreDyeFromImage(img);
+        img.src = project.dye;
+      }
+    }catch(err){
+      window.__novaShowError('Open failed: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+};
+
+document.getElementById('exportBtn').onclick = (e)=>{
+  const btn = e.currentTarget;
+  btn.classList.remove('pulse'); void btn.offsetWidth; btn.classList.add('pulse');
+  performExport();
+};
+const transparentSwitch = document.getElementById('transparentSwitch');
+transparentSwitch.onclick = ()=> transparentSwitch.classList.toggle('on');
 
 /* mute switch */
 const muteSwitch = document.getElementById('muteSwitch');
@@ -1207,10 +2826,12 @@ uniform vec3 color;
 uniform vec2 point;
 uniform float radius;
 uniform float mixMode; // 0 = additive (velocity), 1 = blend toward color, bounded (dye/paint)
+uniform float sharpness; // reshapes the edge: <1 = soft/wispy, >1 = crisp/sharp
 void main(){
   vec2 p = vUv - point;
   p.x *= aspect;
   float d = exp(-dot(p,p)/radius);
+  d = pow(clamp(d,0.0,1.0), sharpness);
   vec3 base = texture2D(uTarget, vUv).xyz;
   vec3 result = mixMode > 0.5 ? mix(base, color, clamp(d,0.0,1.0)) : base + d*color;
   gl_FragColor = vec4(result, 1.0);
@@ -1317,6 +2938,65 @@ uniform sampler2D uTexture;
 uniform float value;
 void main(){ gl_FragColor = value * texture2D(uTexture, vUv); }`;
 
+/* Reflective wall for the velocity field. Any flow heading OUT through the
+   frame gets reversed (with energy loss), so fluid genuinely bounces back
+   inside instead of merely being slowed down and eventually leaking out.
+   Inward flow is left untouched, so paint can still move freely. */
+/* Realistic water: surface tension. Compares each point's paint density to
+   its neighbours — dense cores pull inward and bead up into cohesive blobs,
+   while thin films at the edges get pushed outward, so a stream hitting a
+   pool visibly splashes apart instead of just smearing. */
+const FS_TENSION = `
+precision highp float;
+varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;
+uniform sampler2D uVelocity;
+uniform sampler2D uDye;
+uniform float cohesion;
+uniform float splash;
+uniform float dt;
+float lum(vec3 c){ return max(c.r, max(c.g, c.b)); }
+void main(){
+  float L = lum(texture2D(uDye, vL).rgb);
+  float R = lum(texture2D(uDye, vR).rgb);
+  float T = lum(texture2D(uDye, vT).rgb);
+  float B = lum(texture2D(uDye, vB).rgb);
+  float C = lum(texture2D(uDye, vUv).rgb);
+
+  // gradient points toward denser paint; curvature tells surface vs. core
+  vec2 grad = vec2(R-L, T-B) * 0.5;
+  float curvature = (L + R + T + B) - 4.0*C;
+
+  vec2 vel = texture2D(uVelocity, vUv).xy;
+
+  // cohesion: drift toward denser neighbours so droplets merge and bead
+  vel += grad * cohesion * C * dt * 60.0;
+
+  // splash: where paint is piling up (negative curvature) push outward
+  float pileUp = max(0.0, -curvature) * C;
+  vel -= normalize(grad + vec2(0.0001)) * pileUp * splash * dt * 60.0;
+
+  vel = clamp(vel, -1000.0, 1000.0);
+  gl_FragColor = vec4(vel, 0.0, 1.0);
+}`;
+
+const FS_MASK = `
+precision highp float;
+varying vec2 vUv;
+uniform sampler2D uTexture;
+uniform float margin;
+void main(){
+  vec4 c = texture2D(uTexture, vUv);
+  vec2 v = c.xy;
+  // Outward flow is fully stopped (not just reflected) — a reflected
+  // current still leaked when Ambient Flow kept re-driving it outward.
+  const float bounce = 0.0;
+  if(vUv.x < margin       && v.x < 0.0) v.x = -v.x * bounce;
+  if(vUv.x > 1.0 - margin && v.x > 0.0) v.x = -v.x * bounce;
+  if(vUv.y < margin       && v.y < 0.0) v.y = -v.y * bounce;
+  if(vUv.y > 1.0 - margin && v.y > 0.0) v.y = -v.y * bounce;
+  gl_FragColor = vec4(v, c.zw);
+}`;
+
 const FS_DISPLAY = `
 precision highp float;
 varying vec2 vUv;
@@ -1329,6 +3009,38 @@ uniform float aspect;
 uniform float mode; // 0 fluid, 1 voronoi, 2 particle(unused: composited on 2d canvas separately)
 uniform float time;
 uniform float audioLevel;
+uniform float clarity; // 1..5, higher = crisper edges, less blurry-looking
+uniform float texStyle; // 0 none, 1 paper, 2 grid, 3 isometric — drawn INTO the
+                        // background so painted water always sits on top of it
+uniform vec2 texRes;
+uniform float voroScale;
+uniform float voroSpeed;
+uniform float voroEdge;
+uniform vec3 bgColor2;
+uniform float bgGradient; // 0 = flat background, 1 = blend between the two colours
+uniform float bgAngle;
+
+float canvasPattern(vec2 uv){
+  vec2 px = uv * texRes;
+  if(texStyle < 0.5) return 0.0;
+  if(texStyle < 1.5){
+    // paper grain
+    float n = fract(sin(dot(floor(px/3.0), vec2(12.9898,78.233))) * 43758.5453);
+    return (n - 0.5) * 0.16;
+  }
+  if(texStyle < 2.5){
+    // graph grid
+    vec2 g = fract(px / 38.0);
+    float line = step(0.96, max(g.x, g.y));
+    return line * 0.13;
+  }
+  // isometric lattice
+  float a = abs(fract((px.x * 0.5773 + px.y) / 44.0) - 0.5);
+  float b = abs(fract((-px.x * 0.5773 + px.y) / 44.0) - 0.5);
+  float c = abs(fract(px.x / 44.0) - 0.5);
+  float l = step(0.47, max(max(1.0-a, 1.0-b), 1.0-c) );
+  return (step(0.48, 1.0-a) + step(0.48, 1.0-b) + step(0.48, 1.0-c)) * 0.09;
+}
 
 vec3 lightAt(vec2 uv, vec2 lp, vec3 col, float inten){
   vec2 d = uv-lp; d.x*=aspect;
@@ -1339,8 +3051,20 @@ vec3 lightAt(vec2 uv, vec2 lp, vec3 col, float inten){
 
 void main(){
   vec3 dye = texture2D(uDye, vUv).xyz;
+  float clarityAmt = clamp((clarity-1.0)/4.0, 0.0, 1.0);
+  dye = mix(dye, smoothstep(0.16, 0.82, dye), clarityAmt*0.75);
   float dyeVis = mode > 1.5 ? 0.22 : 1.0;
-  vec3 col = bgColor + dye*dyeVis;
+  // The surface texture is composited into the background first, so any
+  // paint laid down covers it instead of showing grid lines through the water.
+  vec3 baseBg = bgColor;
+  if(bgGradient > 0.5){
+    // project the pixel onto the gradient direction for a clean linear blend
+    vec2 dir = vec2(cos(bgAngle), sin(bgAngle));
+    float t = clamp(dot(vUv - 0.5, dir) + 0.5, 0.0, 1.0);
+    baseBg = mix(bgColor, bgColor2, t);
+  }
+  vec3 surface = baseBg + vec3(canvasPattern(vUv));
+  vec3 col = surface + dye*dyeVis;
   col += lightAt(vUv, lp0, light0.rgb, light0.a);
   col += lightAt(vUv, lp1, light1.rgb, light1.a);
   col += lightAt(vUv, lp2, light2.rgb, light2.a);
@@ -1349,7 +3073,7 @@ void main(){
 
   if(mode > 0.5 && mode < 1.5){
     // voronoi overlay modulated by dye brightness
-    vec2 uv2 = vUv*vec2(aspect,1.0)*9.0;
+    vec2 uv2 = vUv*vec2(aspect,1.0)*voroScale;
     vec2 ip = floor(uv2);
     float minD = 8.0; vec2 minP;
     for(int y=-1;y<=1;y++){
@@ -1357,13 +3081,13 @@ void main(){
         vec2 neighbor = vec2(float(x),float(y));
         vec2 seed = ip+neighbor;
         vec2 rnd = fract(sin(vec2(dot(seed,vec2(127.1,311.7)),dot(seed,vec2(269.5,183.3))))*43758.5453);
-        rnd = 0.5+0.5*sin(time*0.4 + 6.2831*rnd);
+        rnd = 0.5+0.5*sin(time*voroSpeed + 6.2831*rnd);
         vec2 diff = neighbor + rnd - fract(uv2);
         float d = length(diff);
         if(d<minD){ minD=d; minP=seed; }
       }
     }
-    float edge = smoothstep(0.0,0.06,minD);
+    float edge = smoothstep(0.0,voroEdge,minD);
     float lum = dot(dye,vec3(0.299,0.587,0.114));
     vec3 cellCol = bgColor*0.4 + dye*1.6;
     col = mix(cellCol*0.5, col, edge);
@@ -1441,6 +3165,8 @@ class FluidSim{
     this.progPressure = createProgram(gl, BASE_VS, FS_PRESSURE);
     this.progGradient = createProgram(gl, BASE_VS, FS_GRADIENT);
     this.progClear = createProgram(gl, BASE_VS, FS_CLEAR);
+    this.progMask = createProgram(gl, BASE_VS, FS_MASK);
+    this.progTension = createProgram(gl, BASE_VS, FS_TENSION);
     this.progDisplay = createProgram(gl, BASE_VS, FS_DISPLAY);
 
     this.simRes = 128;
@@ -1520,9 +3246,14 @@ class FluidSim{
     gl.uniform3f(this.progSplat.uniforms.color, dx, dy, 0.0);
     gl.uniform1f(this.progSplat.uniforms.radius, radius||0.0025);
     gl.uniform1f(this.progSplat.uniforms.mixMode, 0.0);
+    gl.uniform1f(this.progSplat.uniforms.sharpness, 1.0);
     this.draw(this.velocity.b); this.velocity.swap();
     // dye — blends toward the brush color instead of stacking additively,
-    // so repeated strokes never overflow into solid white
+    // so repeated strokes never overflow into solid white. Sharpness comes
+    // from the Wispiness setting: low = soft/feathered edges that break
+    // apart, high = a crisp, solid-edged blob.
+    const wisp = (typeof state!=='undefined' && state.wispiness) ? state.wispiness : 5;
+    const sharpnessAmt = 0.35 + (wisp-1)/9 * 2.3;
     this.bindQuad(this.progSplat, this.dye.a.texel);
     gl.uniform1i(this.progSplat.uniforms.uTarget, 0);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.dye.a.tex);
@@ -1531,6 +3262,7 @@ class FluidSim{
     gl.uniform3f(this.progSplat.uniforms.color, color[0]/255, color[1]/255, color[2]/255);
     gl.uniform1f(this.progSplat.uniforms.radius, (radius||0.0025)*1.6);
     gl.uniform1f(this.progSplat.uniforms.mixMode, 1.0);
+    gl.uniform1f(this.progSplat.uniforms.sharpness, sharpnessAmt);
     this.draw(this.dye.b); this.dye.swap();
   }
 
@@ -1547,6 +3279,26 @@ class FluidSim{
     gl.uniform3f(this.progSplat.uniforms.color, dx, dy, 0.0);
     gl.uniform1f(this.progSplat.uniforms.radius, radius||0.02);
     gl.uniform1f(this.progSplat.uniforms.mixMode, 0.0);
+    gl.uniform1f(this.progSplat.uniforms.sharpness, 1.0);
+    this.draw(this.velocity.b); this.velocity.swap();
+  }
+
+  // blends velocity TOWARD a target vector instead of adding to it — this
+  // is self-limiting (it converges to the target and stays there) so it
+  // never runs away no matter how many frames it's applied for. Used for
+  // Ambient Flow, which needs a genuinely stable, comparable 1..10 speed.
+  splatVelocitySet(x,y,dx,dy,radius){
+    const gl = this.gl;
+    const aspect = this.canvas.width/this.canvas.height;
+    this.bindQuad(this.progSplat, this.velocity.a.texel);
+    gl.uniform1i(this.progSplat.uniforms.uTarget, 0);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.velocity.a.tex);
+    gl.uniform1f(this.progSplat.uniforms.aspect, aspect);
+    gl.uniform2f(this.progSplat.uniforms.point, x, y);
+    gl.uniform3f(this.progSplat.uniforms.color, dx, dy, 0.0);
+    gl.uniform1f(this.progSplat.uniforms.radius, radius||0.3);
+    gl.uniform1f(this.progSplat.uniforms.mixMode, 1.0);
+    gl.uniform1f(this.progSplat.uniforms.sharpness, 1.0);
     this.draw(this.velocity.b); this.velocity.swap();
   }
 
@@ -1567,6 +3319,19 @@ class FluidSim{
     gl.uniform1f(this.progVort.uniforms.curlAmount, state.curl);
     gl.uniform1f(this.progVort.uniforms.dt, dt);
     this.draw(this.velocity.b); this.velocity.swap();
+    // surface tension (Realistic Water) — runs before the pressure solve so
+    // its cohesion/splash forces are made divergence-free like any other force
+    if(typeof state !== 'undefined' && state.realWater){
+      this.bindQuad(this.progTension, this.velocity.a.texel);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.velocity.a.tex);
+      gl.uniform1i(this.progTension.uniforms.uVelocity, 0);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, this.dye.a.tex);
+      gl.uniform1i(this.progTension.uniforms.uDye, 1);
+      gl.uniform1f(this.progTension.uniforms.cohesion, (state.cohesion||5) * 1.6);
+      gl.uniform1f(this.progTension.uniforms.splash, (state.splash||5) * 2.2);
+      gl.uniform1f(this.progTension.uniforms.dt, dt);
+      this.draw(this.velocity.b); this.velocity.swap();
+    }
     // divergence
     this.bindQuad(this.progDiv, this.velocity.a.texel);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.velocity.a.tex);
@@ -1594,6 +3359,10 @@ class FluidSim{
     gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, this.velocity.a.tex);
     gl.uniform1i(this.progGradient.uniforms.uVelocity, 1);
     this.draw(this.velocity.b); this.velocity.swap();
+    // Canvas Frame wall — applied here, after the pressure solve produced
+    // the final divergence-free field but BEFORE advection uses it, so the
+    // velocity that actually transports the dye already respects the frame.
+    if(typeof state !== 'undefined' && state.canvasFrame) this.applyFrameMask(0.06);
     // advect velocity
     this.bindQuad(this.progAdvect, this.velocity.a.texel);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.velocity.a.tex);
@@ -1603,6 +3372,9 @@ class FluidSim{
     gl.uniform1f(this.progAdvect.uniforms.dt, dt);
     gl.uniform1f(this.progAdvect.uniforms.dissipation, 1.0 - (1.0-state.viscosity)*0.02);
     this.draw(this.velocity.b); this.velocity.swap();
+    // Velocity advection can reintroduce outward flow at the edges, so the
+    // wall is enforced once more on the exact field the dye will be moved by.
+    if(typeof state !== 'undefined' && state.canvasFrame) this.applyFrameMask(0.06);
     // advect dye
     this.bindQuad(this.progAdvect, this.dye.a.texel);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.velocity.a.tex);
@@ -1631,10 +3403,23 @@ class FluidSim{
     });
     gl.uniform1f(this.progDisplay.uniforms.glowAmount, state.glow);
     gl.uniform1f(this.progDisplay.uniforms.aspect, aspect);
-    const dimDyeModes = state.artMode==='particle' || state.artMode==='geo' || state.artMode==='lineart' || state.artMode==='sparks' || state.artMode==='blackhole';
+    // Particle Flow no longer dims the water — the paint stays fully vivid
+    // underneath the particles instead of washing out to 22%.
+    const dimDyeModes = state.artMode==='geo' || state.artMode==='lineart' || state.artMode==='sparks';
     gl.uniform1f(this.progDisplay.uniforms.mode, state.artMode==='voronoi'?1.0:(dimDyeModes?2.0:0.0));
     gl.uniform1f(this.progDisplay.uniforms.time, performance.now()/1000);
     gl.uniform1f(this.progDisplay.uniforms.audioLevel, state.audioReactive);
+    gl.uniform1f(this.progDisplay.uniforms.clarity, state.clarity||3);
+    const styleIndex = {plain:0, paper:1, grid:2, iso:3}[state.canvasStyle||'plain'] || 0;
+    gl.uniform1f(this.progDisplay.uniforms.texStyle, state.textureBehind ? styleIndex : 0);
+    gl.uniform2f(this.progDisplay.uniforms.texRes, this.canvas.width, this.canvas.height);
+    gl.uniform1f(this.progDisplay.uniforms.voroScale, state.voroScale || 9);
+    gl.uniform1f(this.progDisplay.uniforms.voroSpeed, (state.voroSpeed || 4) * 0.1);
+    gl.uniform1f(this.progDisplay.uniforms.voroEdge, 0.012 * (state.voroEdge || 5));
+    const bg2 = state.bgColor2 || state.bgColor;
+    gl.uniform3f(this.progDisplay.uniforms.bgColor2, bg2[0]/255, bg2[1]/255, bg2[2]/255);
+    gl.uniform1f(this.progDisplay.uniforms.bgGradient, state.bgGradient ? 1 : 0);
+    gl.uniform1f(this.progDisplay.uniforms.bgAngle, ((state.bgAngle||90) * Math.PI) / 180);
     this.draw(null);
   }
 
@@ -1646,9 +3431,48 @@ class FluidSim{
     gl.uniform1f(this.progClear.uniforms.value, 0.0);
     this.draw(this.dye.b); this.dye.swap();
   }
+
+  // Canvas Frame: applies a reflective wall to the VELOCITY field at the
+  // canvas edge — outward flow is reversed so fluid bounces back inside.
+  // The dye (the actual painted color) is deliberately never touched here,
+  // since masking it would repeatedly erase artwork every frame.
+  applyFrameMask(margin){
+    const gl = this.gl;
+    if(!this.progMask || !this.progMask.uniforms || this.progMask.uniforms.margin === undefined) return;
+    this.bindQuad(this.progMask, this.velocity.a.texel);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.velocity.a.tex);
+    gl.uniform1i(this.progMask.uniforms.uTexture, 0);
+    gl.uniform1f(this.progMask.uniforms.margin, margin);
+    this.draw(this.velocity.b); this.velocity.swap();
+  }
+
+  // Loads a saved dye snapshot back into the simulation, so a reopened
+  // project resumes with the artwork intact and still fully paintable.
+  loadDyeFromImage(img){
+    const gl = this.gl;
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); // canvas is top-down, dye is bottom-up
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+
+    this.bindQuad(this.progClear, this.dye.a.texel);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.uniform1i(this.progClear.uniforms.uTexture, 0);
+    gl.uniform1f(this.progClear.uniforms.value, 1.0);
+    this.draw(this.dye.b); this.dye.swap();
+    gl.deleteTexture(tex);
+  }
 }
 
 let fluidSim;
+function restoreDyeFromImage(img){
+  if(fluidSim) fluidSim.loadDyeFromImage(img);
+}
 
 /* ============================================================
    PARTICLE FLOW (lightweight, noise-driven, blended over fluid)
@@ -1656,38 +3480,116 @@ let fluidSim;
 const particles = [];
 function seedParticles(){
   particles.length = 0;
-  for(let i=0;i<380;i++){
-    particles.push({x:Math.random(), y:Math.random(), a:Math.random()*Math.PI*2, life:Math.random()});
+  const total = (typeof state!=='undefined' && state.particleCount) ? state.particleCount : 380;
+  for(let i=0;i<total;i++){
+    const pc = state.particleColors || [];
+    const cn = state.particleColorCount || 1;
+    particles.push({x:Math.random(), y:Math.random(), a:Math.random()*Math.PI*2, life:Math.random(),
+      color:(pc[i % cn] || state.brushColor || [0,240,255]).slice()});
   }
 }
 seedParticles();
 function noise2(x,y,t){ return Math.sin(x*3.1+t*0.6)+Math.cos(y*2.7-t*0.5)+Math.sin((x+y)*4.2+t*0.3); }
-function drawParticles(ctx, t){
+/* Reads the painted dye back from the GPU at a low resolution so particles
+   can react to the water. Done once per frame and cached — reading per
+   particle would stall the pipeline badly. */
+let dyeSample = null, dyeSampleW = 0, dyeSampleH = 0;
+function sampleDyeField(){
+  if(!fluidSim || !fluidSim.dye) return false;
+  const gl = fluidSim.gl;
+  const src = fluidSim.dye.a;
+  const w = Math.min(64, src.w), hh = Math.min(64, src.h);
+  if(!dyeSample || dyeSampleW !== w || dyeSampleH !== hh){
+    dyeSample = new Uint8Array(w*hh*4); dyeSampleW = w; dyeSampleH = hh;
+  }
+  try{
+    gl.bindFramebuffer(gl.FRAMEBUFFER, src.fbo);
+    gl.readPixels(0, 0, w, hh, gl.RGBA, gl.UNSIGNED_BYTE, dyeSample);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    return true;
+  }catch(e){ return false; }
+}
+function dyeAt(x, y){
+  if(!dyeSample) return null;
+  const px = Math.max(0, Math.min(dyeSampleW-1, Math.round(x*(dyeSampleW-1))));
+  const py = Math.max(0, Math.min(dyeSampleH-1, Math.round(y*(dyeSampleH-1))));
+  const i = (py*dyeSampleW + px)*4;
+  return [dyeSample[i], dyeSample[i+1], dyeSample[i+2]];
+}
+
+function drawParticles(ctx, t, frozen){
   ctx.save();
   const w = jellyCanvas.width, h = jellyCanvas.height;
   ctx.globalCompositeOperation = 'lighter';
   const touches = Object.values(pointerData).filter(pd=>pd.down);
   particles.forEach(p=>{
-    const n = noise2(p.x*3,p.y*3,t*0.001)*0.5;
-    p.a += n*0.02;
-    p.x += Math.cos(p.a)*0.0016*(1+state.audioReactive);
-    p.y += Math.sin(p.a)*0.0016*(1+state.audioReactive);
-    // scatter away from any active touch/click point
-    touches.forEach(pd=>{
-      const dx = p.x-pd.lx, dy = p.y-pd.ly;
-      const d = Math.hypot(dx,dy);
-      const radius = 0.16;
-      if(d < radius && d > 0.0001){
-        const push = (1 - d/radius) * 0.05;
-        p.x += (dx/d)*push;
-        p.y += (dy/d)*push;
+    if(!frozen){
+      const n = noise2(p.x*3,p.y*3,t*0.001)*0.5;
+      p.a += n*0.02;
+      const spd = 0.0016 * ((state.particleSpeed||5)/5);
+      p.x += Math.cos(p.a)*spd*(1+state.audioReactive);
+      p.y += Math.sin(p.a)*spd*(1+state.audioReactive);
+      // scatter away from any active touch/click point
+      touches.forEach(pd=>{
+        const dx = p.x-pd.lx, dy = p.y-pd.ly;
+        const d = Math.hypot(dx,dy);
+        const radius = 0.16;
+        if(d < radius && d > 0.0001){
+          const push = (1 - d/radius) * 0.05;
+          p.x += (dx/d)*push;
+          p.y += (dy/d)*push;
+        }
+      });
+      // --- interaction with the painted water ---
+      const mode = state.particleInteract || 'none';
+      if(mode !== 'none' && dyeSample){
+        const amt = (state.particleInteractAmt || 5) / 5;
+        const c = dyeAt(p.x, p.y);
+        if(c){
+          const density = Math.max(c[0], Math.max(c[1], c[2])) / 255;
+          if(mode === 'absorb' && density > 0.04){
+            // gradually take on the colour of the paint it passes through
+            const k = Math.min(1, 0.06 * amt * density * 60 * 0.016);
+            p.color = [
+              p.color[0]*(1-k) + c[0]*k,
+              p.color[1]*(1-k) + c[1]*k,
+              p.color[2]*(1-k) + c[2]*k
+            ];
+          } else if(mode === 'deposit'){
+            // leave its own colour behind in the fluid
+            if(Math.random() < 0.08 * amt){
+              fluidSim.splat(p.x, p.y, 0, 0, p.color, 0.0008 * amt);
+            }
+          } else if(mode === 'bounce' && density > 0.10){
+            // denser paint deflects the particle away from it
+            const e = 0.012;
+            const gx = (Math.max(...(dyeAt(Math.min(1,p.x+e), p.y)||[0,0,0])) -
+                        Math.max(...(dyeAt(Math.max(0,p.x-e), p.y)||[0,0,0]))) / 255;
+            const gy = (Math.max(...(dyeAt(p.x, Math.min(1,p.y+e))||[0,0,0])) -
+                        Math.max(...(dyeAt(p.x, Math.max(0,p.y-e))||[0,0,0]))) / 255;
+            const len = Math.hypot(gx, gy) || 1;
+            p.x -= (gx/len) * 0.004 * amt;
+            p.y -= (gy/len) * 0.004 * amt;
+            p.a += (Math.random()-0.5) * 1.2 * amt;
+          } else if(mode === 'carry' && density > 0.04){
+            // drift along the paint, as if caught in the current
+            const e = 0.012;
+            const gx = (Math.max(...(dyeAt(Math.min(1,p.x+e), p.y)||[0,0,0])) -
+                        Math.max(...(dyeAt(Math.max(0,p.x-e), p.y)||[0,0,0]))) / 255;
+            const gy = (Math.max(...(dyeAt(p.x, Math.min(1,p.y+e))||[0,0,0])) -
+                        Math.max(...(dyeAt(p.x, Math.max(0,p.y-e))||[0,0,0]))) / 255;
+            p.x += gx * 0.05 * amt;
+            p.y += gy * 0.05 * amt;
+          }
+        }
       }
-    });
-    if(p.x<0)p.x+=1; if(p.x>1)p.x-=1; if(p.y<0)p.y+=1; if(p.y>1)p.y-=1;
-    const [r,g,b] = state.brushColor;
-    ctx.fillStyle = `rgba(${r},${g},${b},0.8)`;
+      if(p.x<0)p.x+=1; if(p.x>1)p.x-=1; if(p.y<0)p.y+=1; if(p.y>1)p.y-=1;
+    }
+    const [r,g,b] = p.color || state.brushColor;
+    const pa = ((state.particleAlpha!=null?state.particleAlpha:80)/100).toFixed(2);
+    ctx.fillStyle = `rgba(${r},${g},${b},${pa})`;
     ctx.beginPath();
-    ctx.arc(p.x*w, p.y*h, 2.4*(devicePixelRatio||1), 0, Math.PI*2);
+    ctx.arc(p.x*w, p.y*h, (state.particleSize||2.4)*(devicePixelRatio||1), 0, Math.PI*2);
     ctx.fill();
   });
   ctx.restore();
@@ -1805,27 +3707,32 @@ function addBlackHoleRing(hole){
   });
   if(hole.rings.length > 12) hole.rings.shift();
 }
-function drawBlackHoles(ctx, dt){
+function drawBlackHoles(ctx, dt, frozen){
   const w = jellyCanvas.width, h = jellyCanvas.height;
+  const levelMul = (state.blackholeLevel||5) / 5;
+  const speedMul = (state.blackholeSpeed||5) / 5;
   blackHoles.forEach(hole=>{
     const cx = hole.x*w, cy = hole.y*h;
 
     // continuously suck in nearby painted fluid color toward the core
-    if(fluidSim){
+    if(fluidSim && !frozen){
       const pts = [[0.045,0],[-0.045,0],[0,0.045],[0,-0.045]];
+      const suck = 11 * levelMul * dt * 60;
       pts.forEach(([ox,oy])=>{
         const sx = hole.x+ox, sy = hole.y+oy;
         const dxp = hole.x-sx, dyp = hole.y-sy;
         const len = Math.hypot(dxp,dyp) || 1;
-        fluidSim.splatVelocityOnly(sx, sy, (dxp/len)*11, (dyp/len)*11, 0.022);
+        fluidSim.splatVelocityOnly(sx, sy, (dxp/len)*suck, (dyp/len)*suck, 0.022);
       });
     }
 
-    // rings: orbit and slowly spiral inward, absorbed near the center
+    // rings: swirl and slowly spiral inward like a whirlpool — the closer
+    // to the center, the faster they whip around, until absorbed
     for(let i=hole.rings.length-1; i>=0; i--){
       const ring = hole.rings[i];
-      ring.angle += dt * ring.speed;
-      ring.radius -= dt * 0.02;
+      const whirl = 1 + Math.max(0, (0.16-ring.radius))*9;
+      ring.angle += dt * ring.speed * whirl * speedMul;
+      ring.radius -= dt * 0.014 * speedMul;
       if(ring.radius < 0.02){
         hole.coreColor = [
           hole.coreColor[0]*0.7 + ring.color[0]*0.3,
@@ -1864,8 +3771,9 @@ function drawBlackHoles(ctx, dt){
 
 /* ============================================================
    SPARKS
-   Ember-like particles that burst from the touch point and drift/fade
-   outward while dragging or holding down. Uses the current brush color.
+   Ember-like particles that burst from the touch point while dragging
+   or holding down, then decelerate and settle in place permanently —
+   they stay on the canvas rather than fading away. Uses the brush color.
 ============================================================ */
 const sparkParticles = [];
 function spawnSparks(x, y, count){
@@ -1875,26 +3783,26 @@ function spawnSparks(x, y, count){
     sparkParticles.push({
       x, y,
       vx: Math.cos(ang)*speed, vy: Math.sin(ang)*speed,
-      life: 1, decay: 0.6 + Math.random()*0.9,
       size: 1.2 + Math.random()*2.2,
+      alpha: 0.55 + Math.random()*0.4,
       color: state.brushColor.slice()
     });
   }
-  if(sparkParticles.length > 500) sparkParticles.splice(0, sparkParticles.length-500);
+  if(sparkParticles.length > 900) sparkParticles.splice(0, sparkParticles.length-900);
 }
 function drawSparks(ctx, dt){
   const w = jellyCanvas.width, h = jellyCanvas.height;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  for(let i=sparkParticles.length-1; i>=0; i--){
+  const drag = Math.exp(-dt*5.5); // quick, framerate-independent settle to rest
+  for(let i=0;i<sparkParticles.length;i++){
     const s = sparkParticles[i];
-    s.vx *= 0.97; s.vy = s.vy*0.97 + dt*0.06; // gentle drag + slight upward flicker drift
+    s.vx *= drag; s.vy *= drag;
     s.x += s.vx*dt; s.y += s.vy*dt;
-    s.life -= dt*s.decay;
-    if(s.life<=0 || s.x<-0.05||s.x>1.05||s.y<-0.05||s.y>1.05){ sparkParticles.splice(i,1); continue; }
+    if(s.x<0) s.x=0; if(s.x>1) s.x=1; if(s.y<0) s.y=0; if(s.y>1) s.y=1;
     const [r,g,b] = s.color;
     ctx.beginPath();
-    ctx.fillStyle = `rgba(${r},${g},${b},${Math.max(0,s.life)})`;
+    ctx.fillStyle = `rgba(${r},${g},${b},${s.alpha})`;
     ctx.arc(s.x*w, s.y*h, s.size*(devicePixelRatio||1), 0, Math.PI*2);
     ctx.fill();
   }
@@ -1928,20 +3836,23 @@ function spawnJelly(x,y){
   return body;
 }
 function updateJelly(){
-  const aspect = fluidCanvas.width/fluidCanvas.height;
   jellyBodies.forEach(body=>{
     const center = body.nodes[0];
+    // Jelly Stretch (1..5): lower = stiff springs that barely give,
+    // higher = loose springs that stretch and sag much further under gravity.
+    const stretch = state.jellyStretch || 3;
+    const stiffness = 0.13 - (stretch-1) * 0.024;   // 0.13 .. 0.034
+    const gravity = 0.00012 * stretch;               // heavier sag as it loosens
     for(let i=1;i<body.nodes.length;i++){
       const n = body.nodes[i];
       // spring to rest position around center
       const restX = center.x + Math.cos(n.baseAng)*n.baseRad;
       const restY = center.y + Math.sin(n.baseAng)*n.baseRad;
-      const stiffness = 0.06;
       let vx = (n.x - n.px), vy = (n.y - n.py);
       vx *= state.damping; vy *= state.damping;
       n.px = n.x; n.py = n.y;
       n.x += vx + (restX - n.x)*stiffness;
-      n.y += vy + (restY - n.y)*stiffness;
+      n.y += vy + (restY - n.y)*stiffness - gravity;
     }
   });
 }
@@ -2053,9 +3964,76 @@ document.getElementById('redoBtn').onclick = ()=> performRedo();
 const pointerData = {};
 let motionTimer = 0;
 
+/* ============================================================
+   SYMMETRY / KALEIDOSCOPE
+   Every paint splat is repeated around the canvas centre N times (and
+   optionally mirrored), turning ordinary strokes into mandala patterns.
+============================================================ */
+function symmetricPoints(x, y, dx, dy){
+  const n = state.symmetry || 1;
+  const out = [];
+  const cx = 0.5, cy = 0.5;
+  const aspect = fluidCanvas.width / fluidCanvas.height;
+  // work in aspect-corrected space so rotations stay circular, not oval
+  const px = (x-cx)*aspect, py = (y-cy);
+  const vx = (dx||0)*aspect, vy = (dy||0);
+  for(let i=0;i<n;i++){
+    const a = (i/n) * Math.PI*2;
+    const cos = Math.cos(a), sin = Math.sin(a);
+    const rx = px*cos - py*sin, ry = px*sin + py*cos;
+    const rvx = vx*cos - vy*sin, rvy = vx*sin + vy*cos;
+    out.push([cx + rx/aspect, cy + ry, rvx/aspect, rvy]);
+    if(state.mirror){
+      // mirror across this arm's axis for a true kaleidoscope
+      const mx = px*cos + py*sin, my = px*sin - py*cos;
+      const mvx = vx*cos + vy*sin, mvy = vx*sin - vy*cos;
+      out.push([cx + mx/aspect, cy + my, mvx/aspect, mvy]);
+    }
+  }
+  return out;
+}
+function splatSym(x, y, dx, dy, color, radius){
+  if((state.symmetry||1) <= 1 && !state.mirror){
+    fluidSim.splat(x, y, dx, dy, color, radius);
+    return;
+  }
+  symmetricPoints(x, y, dx, dy).forEach(([sx,sy,sdx,sdy])=>{
+    if(sx < -0.1 || sx > 1.1 || sy < -0.1 || sy > 1.1) return;
+    fluidSim.splat(sx, sy, sdx, sdy, color, radius);
+  });
+}
+
+/* Gradient Brush: rotates the brush hue continuously while drawing, so a
+   single stroke sweeps through a colour range instead of one flat colour. */
+let gradientHue = 0;
+function hsvToRgb(h, s, v){
+  const i = Math.floor(h*6), f = h*6 - i;
+  const p = v*(1-s), q = v*(1-f*s), t = v*(1-(1-f)*s);
+  let r,g,b;
+  switch(i % 6){
+    case 0: r=v; g=t; b=p; break;
+    case 1: r=q; g=v; b=p; break;
+    case 2: r=p; g=v; b=t; break;
+    case 3: r=p; g=q; b=v; break;
+    case 4: r=t; g=p; b=v; break;
+    default: r=v; g=p; b=q;
+  }
+  return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+}
+function activeBrushColor(dt){
+  if(!state.gradientBrush) return state.brushColor;
+  gradientHue = (gradientHue + (state.gradientSpeed||5) * 0.0025) % 1;
+  return hsvToRgb(gradientHue, 0.85, 1.0);
+}
+
 function normPos(clientX, clientY){
   const rect = fluidCanvas.getBoundingClientRect();
-  return { x:(clientX-rect.left)/rect.width, y:1-(clientY-rect.top)/rect.height };
+  let x = (clientX-rect.left)/rect.width, y = 1-(clientY-rect.top)/rect.height;
+  if(state.canvasFrame){
+    x = Math.min(0.95, Math.max(0.05, x));
+    y = Math.min(0.95, Math.max(0.05, y));
+  }
+  return { x, y };
 }
 function findNearestJelly(p, threshold){
   const aspect = fluidCanvas.height/fluidCanvas.width;
@@ -2065,6 +4043,35 @@ function findNearestJelly(p, threshold){
     if(d<nd){ nd=d; nearest=b; }
   });
   return (nearest && nd<threshold) ? nearest : null;
+}
+
+function applyStretchForce(x, y, dx, dy){
+  const strength = 46 * state.brushSize;
+  if(fluidSim) fluidSim.splatVelocityOnly(x, y, dx*strength, dy*strength, 0.026*state.brushSize);
+
+  // also nudge whatever the current art mode is drawing, so its shapes
+  // visibly twist/drag along with the stretch gesture too
+  const radius = 0.16, pushScale = 3.2;
+  const nudge = (arr, getXY, setXY)=>{
+    arr.forEach(item=>{
+      const pos = getXY(item);
+      const ddx = pos[0]-x, ddy = pos[1]-y;
+      const d = Math.hypot(ddx,ddy);
+      if(d < radius){
+        const f = (1 - d/radius) * pushScale;
+        setXY(item, pos[0] + dx*f*0.5, pos[1] + dy*f*0.5);
+      }
+    });
+  };
+  if(state.artMode==='geo' || state.artMode==='lineart'){
+    nudge(geoLineShapes, s=>[s.x,s.y], (s,nx,ny)=>{ s.x=nx; s.y=ny; });
+  } else if(state.artMode==='particle'){
+    nudge(particles, p2=>[p2.x,p2.y], (p2,nx,ny)=>{ p2.x=nx; p2.y=ny; });
+  } else if(state.artMode==='sparks'){
+    nudge(sparkParticles, s=>[s.x,s.y], (s,nx,ny)=>{ s.x=nx; s.y=ny; });
+  } else if(state.artMode==='blackhole'){
+    nudge(blackHoles, hl=>[hl.x,hl.y], (hl,nx,ny)=>{ hl.x=nx; hl.y=ny; });
+  }
 }
 
 function handleDown(id, clientX, clientY){
@@ -2083,11 +4090,22 @@ function handleDown(id, clientX, clientY){
     playSfx();
   } else if(state.tool==='paint' && state.artMode==='pool'){
     beginDyeUndo();
-    fluidSim.splat(p.x,p.y,0,0,state.brushColor, 0.006*state.brushSize);
+    splatSym(p.x,p.y,0,0,activeBrushColor(), 0.006*state.brushSize);
+    playSfx();
+  } else if(state.tool==='paint' && state.artMode==='fishtank'){
+    beginDyeUndo();
+    splatSym(p.x,p.y,0,0,activeBrushColor(), 0.005*state.brushSize);
     playSfx();
   } else if(state.tool==='paint'){
     beginDyeUndo();
-    fluidSim.splat(p.x,p.y,0,0,state.brushColor, 0.004*state.brushSize);
+    splatSym(p.x,p.y,0,0,activeBrushColor(), 0.004*state.brushSize);
+    playSfx();
+  } else if(state.tool==='eraser'){
+    beginDyeUndo();
+    eraseAt(p.x, p.y);
+    playSfx();
+  } else if(state.tool==='picker'){
+    pickColorAt(p.x, p.y);
     playSfx();
   } else if(state.tool==='stretch'){
     beginDyeUndo();
@@ -2122,9 +4140,14 @@ function handleMove(id, clientX, clientY){
     // dragging here just moves the pour point.
   } else if(state.tool==='stretch'){
     // pushes existing paint around like kneading clay — no new color added,
-    // just a strong directional pull through the fluid velocity field
-    const strength = 46 * state.brushSize;
-    fluidSim.splatVelocityOnly(p.x, p.y, dx*strength, dy*strength, 0.026*state.brushSize);
+    // just a strong directional pull through the fluid velocity field, and
+    // whatever the active art mode is currently drawing (lines, particles,
+    // sparks, black holes) gets nudged along with the drag too.
+    applyStretchForce(p.x, p.y, dx, dy);
+  } else if(state.tool==='eraser'){
+    eraseAt(p.x, p.y);
+  } else if(state.tool==='picker'){
+    pickColorAt(p.x, p.y);
   } else if(state.tool==='paint'){
     let fx=dx*6, fy=dy*6;
     motionTimer += 0.05;
@@ -2132,13 +4155,14 @@ function handleMove(id, clientX, clientY){
     else if(state.motion==='zigzag'){ const sign = Math.sin(motionTimer*10)>0?1:-1; const perp=[-dy,dx]; fx += perp[0]*20*sign; fy += perp[1]*20*sign; }
     else if(state.motion==='wave'){ const wobble = Math.sin(motionTimer*14); fx += dx*wobble*9 + (-dy)*wobble*6; fy += dy*wobble*9 + dx*wobble*6; }
     else if(state.motion==='radial'){ fx += dx*22; fy += dy*22; }
+    const target = activeBrushColor();
     // color blend: mix new brush color toward previous stroke color for continuity of physical blend
     pd.color = [
-      pd.color[0]*0.7 + state.brushColor[0]*0.3,
-      pd.color[1]*0.7 + state.brushColor[1]*0.3,
-      pd.color[2]*0.7 + state.brushColor[2]*0.3
+      pd.color[0]*0.7 + target[0]*0.3,
+      pd.color[1]*0.7 + target[1]*0.3,
+      pd.color[2]*0.7 + target[2]*0.3
     ];
-    fluidSim.splat(p.x,p.y,fx,fy,pd.color,(0.0032 + state.audioReactive*0.002)*state.brushSize);
+    splatSym(p.x,p.y,fx,fy,pd.color,(0.0032 + state.audioReactive*0.002)*state.brushSize);
   } else if(state.tool==='jelly'){
     const nearest = findNearestJelly(p, 0.24);
     if(nearest){ nearest.cx = p.x; nearest.cy = p.y; }
@@ -2147,6 +4171,30 @@ function handleMove(id, clientX, clientY){
   }
   pd.lx=p.x; pd.ly=p.y;
 }
+/* Eraser: blends the dye toward black at that spot, which removes painted
+   colour locally without disturbing the rest of the artwork. */
+function eraseAt(x, y){
+  if(!fluidSim) return;
+  splatSym(x, y, 0, 0, [0,0,0], 0.006*state.brushSize);
+}
+
+/* Eyedropper: reads the actual rendered pixel under the finger, so it picks
+   up blended colours the fluid produced — not just the last brush colour. */
+function pickColorAt(x, y){
+  if(!fluidSim) return;
+  const gl = fluidSim.gl;
+  const px = Math.max(0, Math.min(fluidCanvas.width-1,  Math.round(x * fluidCanvas.width)));
+  const py = Math.max(0, Math.min(fluidCanvas.height-1, Math.round(y * fluidCanvas.height)));
+  const buf = new Uint8Array(4);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.readPixels(px, py, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+  const picked = [buf[0], buf[1], buf[2]];
+  if(picked[0]+picked[1]+picked[2] === 0) return; // ignore empty background
+  state.brushColor = picked;
+  document.getElementById('brushColor').value = rgbToHex(picked);
+  pushRecentColor(picked);
+}
+
 function handleUp(id){
   if(pointerData[id]){ pointerData[id].down=false; pointerData[id].growShape=null; }
   if(state.tool==='jelly') jellyBodies.forEach(b=>b.dragIdx=-1);
@@ -2159,13 +4207,14 @@ function updateLineArtGrowth(dt){
 
 function spawnRipple(x,y){
   const steps = 12;
+  const col = activeBrushColor();
   for(let i=0;i<steps;i++){
     setTimeout(()=>{
       const ang = (i/steps)*Math.PI*2;
-      fluidSim.splat(x,y, Math.cos(ang)*4.5, Math.sin(ang)*4.5, state.brushColor, 0.003*state.brushSize);
+      splatSym(x,y, Math.cos(ang)*4.5, Math.sin(ang)*4.5, col, 0.003*state.brushSize);
     }, i*14);
   }
-  fluidSim.splat(x,y,0,0, state.brushColor, 0.009*state.brushSize);
+  splatSym(x,y,0,0, col, 0.009*state.brushSize);
 }
 
 fluidCanvas.addEventListener('mousedown', e=> handleDown('mouse', e.clientX, e.clientY));
@@ -2230,10 +4279,14 @@ function updateAudioViz(){
     sum += v;
     bar.style.height = Math.max(3, (v/255)*16)+'px';
   });
-  state.audioReactive = Math.min(1, (sum/(bars.length*255))*2.4);
+  // The Reactivity slider (1..10) scales how strongly the music drives the
+  // artwork overall — this feeds the pulse force, the splat size and the
+  // neon brightness, so the whole range is clearly distinguishable.
+  const reactMul = (state.audioReactivity||5) / 5;
+  state.audioReactive = Math.min(1, (sum/(bars.length*255))*2.4*reactMul);
   let bassSum = 0;
   for(let i=0;i<6;i++) bassSum += analyserData[i] || 0;
-  state.audioBass = Math.min(1, (bassSum/(6*255))*1.7);
+  state.audioBass = Math.min(1, (bassSum/(6*255))*1.7*reactMul);
 }
 
 /* Makes existing painted color visibly move/bounce with the music: pushes
@@ -2243,9 +4296,10 @@ let audioPulseAngle = 0;
 function applyAudioFluidPulse(dt){
   if(!fluidSim || typeof isPlaying==='undefined' || !isPlaying) return;
   const bass = state.audioBass || 0;
-  if(bass < 0.05) return;
-  audioPulseAngle += dt * 2.4;
-  const force = bass * 34;
+  if(bass < 0.015) return;
+  const reactMul = (state.audioReactivity||5) / 5; // 1 = slow, 10 = fast
+  audioPulseAngle += dt * 2.4 * reactMul;
+  const force = Math.min(90, bass * 34 * dt * 60 * reactMul);
   const p1x = 0.5 + 0.26*Math.cos(audioPulseAngle);
   const p1y = 0.5 + 0.26*Math.sin(audioPulseAngle);
   const p2x = 0.5 + 0.26*Math.cos(audioPulseAngle+Math.PI);
@@ -2266,7 +4320,7 @@ function applyColorPoolPouring(dt){
     const radius = Math.min(0.05, 0.006 + pd.pourAmount*0.012) * state.brushSize;
     fluidSim.splat(pd.lx, pd.ly, 0, 0, state.brushColor, radius);
     if(pd.pourAmount > 0.3){
-      const spread = Math.min(14, pd.pourAmount*3);
+      const spread = Math.min(14, pd.pourAmount*3) * dt * 60;
       const t = performance.now()/1000;
       for(let i=0;i<4;i++){
         const ang = (i/4)*Math.PI*2 + t*0.6;
@@ -2274,6 +4328,54 @@ function applyColorPoolPouring(dt){
       }
     }
   });
+}
+
+/* Fish Tank: poured color has weight and keeps falling in the chosen
+   direction (gravity), splattering wider the longer it's poured — like
+   pouring ink into an aquarium. Falls toward the Ambient Flow direction
+   if one is set, otherwise straight down. */
+function applyFishTankPouring(dt){
+  if(!fluidSim) return;
+  Object.values(pointerData).forEach(pd=>{
+    if(!pd.down || state.tool!=='paint' || state.artMode!=='fishtank') return;
+    pd.pourAmount = Math.min(6, (pd.pourAmount||0) + dt);
+    const radius = Math.min(0.045, 0.005 + pd.pourAmount*0.008) * state.brushSize;
+    fluidSim.splat(pd.lx, pd.ly, 0, 0, state.brushColor, radius);
+    let gx = 0, gy = -1;
+    if(state.flowEnabled && (state.flowDir.x || state.flowDir.y)){ gx = state.flowDir.x; gy = state.flowDir.y; }
+    const weight = (16 + pd.pourAmount*6) * dt * 60;
+    fluidSim.splatVelocityOnly(pd.lx, pd.ly, gx*weight, gy*weight, 0.03*state.brushSize);
+  });
+}
+
+/* Ambient Flow: blends the fluid's velocity TOWARD a target vector rather
+   than adding to it every frame — this is self-limiting, so it converges
+   to a stable speed and stays there. "1" is a gentle drift, "10" a strong
+   current, and it stays that way no matter how long it runs. */
+function applyAmbientFlow(dt){
+  if(!fluidSim || !state.flowEnabled) return;
+  if(!state.flowDir.x && !state.flowDir.y) return;
+  const target = (state.flowSpeed||5) * 3.2;
+  const dx = state.flowDir.x*target, dy = state.flowDir.y*target;
+  // With Canvas Frame on, keep the flow injection well inside the frame and
+  // tighter in radius, so it doesn't constantly re-push color into the wall.
+  const framed = state.canvasFrame;
+  const pts = framed
+    ? [[0.35,0.35],[0.65,0.35],[0.35,0.65],[0.65,0.65],[0.5,0.5]]
+    : [[0.2,0.2],[0.8,0.2],[0.2,0.8],[0.8,0.8],[0.5,0.5]];
+  const radius = framed ? 0.2 : 0.45;
+  pts.forEach(([x,y])=>{
+    fluidSim.splatVelocitySet(x, y, dx, dy, radius);
+  });
+}
+
+/* Canvas Frame: bounces outward-flowing fluid back inside at the frame edge.
+   The main enforcement happens inside FluidSim.step() (around the pressure
+   solve and advection); this extra pass catches velocity injected by tools
+   and Ambient Flow before the step even begins. Paint is never erased. */
+function applyCanvasFrameContainment(dt){
+  if(!fluidSim || !state.canvasFrame) return;
+  fluidSim.applyFrameMask(0.06);
 }
 
 function stopTrack(){
@@ -2396,20 +4498,50 @@ function mainLoop(){
   if(!document.getElementById('studio').classList.contains('active')) return;
   if(!fluidSim) return;
   const now = performance.now();
-  const dt = Math.min((now - fluidSim.lastTime)/1000, 0.033);
+  const rawDt = Math.min((now - fluidSim.lastTime)/1000, 0.033);
   fluidSim.lastTime = now;
-  updateAudioViz();
-  applyAudioFluidPulse(dt);
-  applyColorPoolPouring(dt);
-  updateLineArtGrowth(dt);
-  fluidSim.step(dt);
+  const frozen = typeof isFrozen!=='undefined' && isFrozen;
+  // Time Scale slows down or speeds up the whole simulation without
+  // affecting frame rate — slow motion makes colour mixing much clearer.
+  const dt = frozen ? 0 : rawDt * (state.timeScale || 1);
+
+  if(!frozen){
+    updateAudioViz();
+    applyAudioFluidPulse(dt);
+    applyColorPoolPouring(dt);
+    applyFishTankPouring(dt);
+    applyAmbientFlow(dt);
+    applyCanvasFrameContainment(dt);
+    updateLineArtGrowth(dt);
+    fluidSim.step(dt);
+    // Re-apply containment AFTER the solve: the pressure/advection stage
+    // regenerates velocity everywhere, which would otherwise let Ambient
+    // Flow push color straight back out through the frame.
+    applyCanvasFrameContainment(dt);
+  }
   fluidSim.render();
 
-  jctx.clearRect(0,0,jellyCanvas.width,jellyCanvas.height);
-  if(state.tool==='jelly' || jellyBodies.length){ updateJelly(); drawJellyBodies(jctx); }
-  if(state.artMode==='particle'){ drawParticles(jctx, now); }
+  // Trail Persistence: instead of wiping the overlay each frame, fade it out
+  // gradually so particles leave light trails. At the maximum the fade is so
+  // slow the trails effectively stay on the canvas permanently.
+  const trail = (state.artMode==='particle') ? (state.particleTrail||0) : 0;
+  if(trail > 0 && !frozen){
+    const fade = 0.35 / Math.pow(trail, 1.7);
+    jctx.save();
+    jctx.globalCompositeOperation = 'destination-out';
+    jctx.fillStyle = 'rgba(0,0,0,'+fade.toFixed(4)+')';
+    jctx.fillRect(0,0,jellyCanvas.width,jellyCanvas.height);
+    jctx.restore();
+  } else if(!(trail > 0)){
+    jctx.clearRect(0,0,jellyCanvas.width,jellyCanvas.height);
+  }
+  if(state.tool==='jelly' || jellyBodies.length){ if(!frozen) updateJelly(); drawJellyBodies(jctx); }
+  if(state.artMode==='particle'){
+    if((state.particleInteract||'none') !== 'none' && !frozen) sampleDyeField();
+    drawParticles(jctx, now, frozen);
+  }
   if(geoLineShapes.length){ drawGeoLineShapes(jctx, dt); }
-  if(blackHoles.length){ drawBlackHoles(jctx, dt); }
+  if(blackHoles.length){ drawBlackHoles(jctx, dt, frozen); }
   if(sparkParticles.length){ drawSparks(jctx, dt); }
 }
 
