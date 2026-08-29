@@ -1331,59 +1331,6 @@ html.studio-on #bgGrid{display:none !important;}
       </div>
       </div>
     </div>
-    <div id="particleFields" style="display:block;">
-      <div class="toggle-row" id="poolParticlesRow" style="display:flex;">
-        <span data-i18n="pPoolParticles" style="font-size:12.5px;color:var(--text-dim);">Enable Particles</span>
-        <div class="switch" id="poolParticlesSwitch"></div>
-      </div>
-      <div id="particleSubFields">
-      <div class="field">
-        <label><span data-i18n="pPtSize">Particle Size</span><span class="val" id="vPtSize">1.0</span></label>
-        <input type="range" id="rPtSize" min="0.8" max="8" step="0.2" value="1">
-      </div>
-      <div class="field">
-        <label><span data-i18n="pPtSpeed">Particle Speed</span><span class="val" id="vPtSpeed">1</span></label>
-        <input type="range" id="rPtSpeed" min="1" max="10" step="1" value="1">
-      </div>
-      <div class="field">
-        <label><span data-i18n="pPtCount">Particle Count</span><span class="val" id="vPtCount">60</span></label>
-        <input type="range" id="rPtCount" min="60" max="1200" step="20" value="60">
-      </div>
-      <div class="field">
-        <label><span data-i18n="pPtTrail">Trail Persistence</span><span class="val" id="vPtTrail">1</span></label>
-        <input type="range" id="rPtTrail" min="0" max="10" step="1" value="1">
-      </div>
-      <div class="field">
-        <label><span data-i18n="pPtAlpha">Particle Opacity</span><span class="val" id="vPtAlpha">10%</span></label>
-        <input type="range" id="rPtAlpha" min="10" max="100" step="5" value="10">
-      </div>
-      <div class="field">
-        <label><span data-i18n="pPtColors">Colour Count</span><span class="val" id="vPtColors">1</span></label>
-        <input type="range" id="rPtColors" min="1" max="5" step="1" value="1">
-      </div>
-      <div class="field" style="margin-top:14px;">
-        <label data-i18n="pPtInteract">Water Interaction</label>
-        <select id="ptInteract">
-          <option value="none" data-i18n="ptiNone">None</option>
-          <option value="absorb" data-i18n="ptiAbsorb">Absorb paint colour</option>
-          <option value="deposit" data-i18n="ptiDeposit">Paint into the water</option>
-          <option value="bounce" data-i18n="ptiBounce">Scatter off the paint</option>
-          <option value="carry" data-i18n="ptiCarry">Carried by the current</option>
-          <option value="charged" data-i18n="ptiCharged">Charged (repel / attract)</option>
-          <option value="sph" data-i18n="ptiSph">Fluid-like (SPH)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label><span data-i18n="pPtInteractAmt">Interaction Strength</span><span class="val" id="vPtInteractAmt">1</span></label>
-        <input type="range" id="rPtInteractAmt" min="1" max="10" step="1" value="1">
-      </div>
-      <div class="mini-grid" id="ptColorGrid"></div>
-      <div class="chip-row" style="margin-top:14px;">
-        <div class="chip" id="ptRandomColorsBtn" data-i18n="btnPtRandomColors">Randomise particle colours</div>
-        <div class="chip" id="ptAddMoreBtn" style="color:#7cf5d0;border-color:rgba(124,245,208,0.4);" data-i18n="btnPtAddMore">+ Add Particles</div>
-      </div>
-      </div>
-    </div>
     <div id="germFields" style="display:none;">
       <div class="field">
         <label data-i18n="pGermColor">Germ Colour</label>
@@ -1575,6 +1522,63 @@ html.studio-on #bgGrid{display:none !important;}
       <div class="field">
         <label><span data-i18n="pSparkSpread">Scatter Speed</span><span class="val" id="vSparkSpread">1</span></label>
         <input type="range" id="rSparkSpread" min="1" max="10" step="1" value="1">
+      </div>
+    </div>
+    <!-- Particles can layer on top of any Art Mode, so its panel always sits
+         last — after every mode's own dedicated settings above — instead of
+         wedging itself between the chip row and whichever mode's fields
+         happen to be open. -->
+    <div id="particleFields" style="display:block;">
+      <div class="toggle-row" id="poolParticlesRow" style="display:flex;">
+        <span data-i18n="pPoolParticles" style="font-size:12.5px;color:var(--text-dim);">Enable Particles</span>
+        <div class="switch" id="poolParticlesSwitch"></div>
+      </div>
+      <div id="particleSubFields">
+      <div class="field">
+        <label><span data-i18n="pPtSize">Particle Size</span><span class="val" id="vPtSize">1.0</span></label>
+        <input type="range" id="rPtSize" min="0.8" max="8" step="0.2" value="1">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtSpeed">Particle Speed</span><span class="val" id="vPtSpeed">1</span></label>
+        <input type="range" id="rPtSpeed" min="1" max="10" step="1" value="1">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtCount">Particle Count</span><span class="val" id="vPtCount">60</span></label>
+        <input type="range" id="rPtCount" min="60" max="1200" step="20" value="60">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtTrail">Trail Persistence</span><span class="val" id="vPtTrail">1</span></label>
+        <input type="range" id="rPtTrail" min="0" max="10" step="1" value="1">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtAlpha">Particle Opacity</span><span class="val" id="vPtAlpha">10%</span></label>
+        <input type="range" id="rPtAlpha" min="10" max="100" step="5" value="10">
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtColors">Colour Count</span><span class="val" id="vPtColors">1</span></label>
+        <input type="range" id="rPtColors" min="1" max="5" step="1" value="1">
+      </div>
+      <div class="field" style="margin-top:14px;">
+        <label data-i18n="pPtInteract">Water Interaction</label>
+        <select id="ptInteract">
+          <option value="none" data-i18n="ptiNone">None</option>
+          <option value="absorb" data-i18n="ptiAbsorb">Absorb paint colour</option>
+          <option value="deposit" data-i18n="ptiDeposit">Paint into the water</option>
+          <option value="bounce" data-i18n="ptiBounce">Scatter off the paint</option>
+          <option value="carry" data-i18n="ptiCarry">Carried by the current</option>
+          <option value="charged" data-i18n="ptiCharged">Charged (repel / attract)</option>
+          <option value="sph" data-i18n="ptiSph">Fluid-like (SPH)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label><span data-i18n="pPtInteractAmt">Interaction Strength</span><span class="val" id="vPtInteractAmt">1</span></label>
+        <input type="range" id="rPtInteractAmt" min="1" max="10" step="1" value="1">
+      </div>
+      <div class="mini-grid" id="ptColorGrid"></div>
+      <div class="chip-row" style="margin-top:14px;">
+        <div class="chip" id="ptRandomColorsBtn" data-i18n="btnPtRandomColors">Randomise particle colours</div>
+        <div class="chip" id="ptAddMoreBtn" style="color:#7cf5d0;border-color:rgba(124,245,208,0.4);" data-i18n="btnPtAddMore">+ Add Particles</div>
+      </div>
       </div>
     </div>
 
